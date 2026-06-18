@@ -30,6 +30,9 @@ jobs:
           - android15-6.6-lts
           - android16-6.12-lts
 
+    env:
+      UPSTREAM_URL: https://android.googlesource.com/kernel/common
+
     steps:
       - name: Disable IPv6
         shell: bash
@@ -44,99 +47,84 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check required tools
+      - name: Configure git
         shell: bash
         run: |
           set -euo pipefail
-          for tool in git make rsync; do
-            command -v "$tool" >/dev/null || {
-              echo "Missing required host tool: $tool" >&2
-              exit 1
-            }
-          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add upstream "$UPSTREAM_URL"
 
-      - name: Clone AOSP kernel/common
+      - name: Fetch upstream branch
         shell: bash
         run: |
           set -euo pipefail
 
           ACK_BRANCH="${{ matrix.ack_branch }}"
-          REPO_URL="https://android.googlesource.com/kernel/common"
 
-          rm -rf /tmp/kernel-common
+          # --update-shallow: on subsequent syncs, extends the existing shallow
+          # boundary rather than creating a new disconnected shallow root.
+          # --depth=200: keeps CI bandwidth bounded while preserving meaningful
+          # ancestry; the window grows with each sync via --update-shallow.
+          # Fall back without --update-shallow for first-time fetches.
+          git fetch upstream "$ACK_BRANCH" \
+            --depth=200 \
+            --update-shallow \
+            --no-tags \
+          || git fetch upstream "$ACK_BRANCH" \
+            --depth=200 \
+            --no-tags
 
-          git clone \
-            --depth=1 \
-            --branch "$ACK_BRANCH" \
-            "$REPO_URL" \
-            /tmp/kernel-common
-
-          cd /tmp/kernel-common
-
+          UPSTREAM_TIP=$(git rev-parse FETCH_HEAD)
           echo "ACK_BRANCH=$ACK_BRANCH" >> "$GITHUB_ENV"
-          echo "ACK_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-          echo "ACK_SHORT_COMMIT=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+          echo "UPSTREAM_TIP=$UPSTREAM_TIP" >> "$GITHUB_ENV"
+          echo "UPSTREAM_SHORT=$(git rev-parse --short FETCH_HEAD)" >> "$GITHUB_ENV"
 
-          VERSION="$(make kernelversion 2>/dev/null || true)"
-          echo "KERNEL_VERSION=$VERSION" >> "$GITHUB_ENV"
+          # Read kernel version from the fetched tree without a full checkout.
+          KERNEL_VERSION=$(git show FETCH_HEAD:Makefile 2>/dev/null \
+            | awk '/^VERSION =/{v=$3} /^PATCHLEVEL =/{p=$3} /^SUBLEVEL =/{s=$3}
+                   END{if(v) printf "%s.%s.%s", v, p, s}')
+          echo "KERNEL_VERSION=${KERNEL_VERSION:-unknown}" >> "$GITHUB_ENV"
 
-      - name: Prepare target branch
+      - name: Check if mirror is already current
+        id: uptodate
         shell: bash
         run: |
           set -euo pipefail
 
-          TARGET_BRANCH="${{ matrix.ack_branch }}"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          if git ls-remote --exit-code --heads origin "$TARGET_BRANCH" >/dev/null 2>&1; then
-            git fetch origin "$TARGET_BRANCH"
-            git checkout -B "$TARGET_BRANCH" "origin/$TARGET_BRANCH"
-          else
-            git checkout --orphan "$TARGET_BRANCH"
-            git rm -rf . >/dev/null 2>&1 || true
+          if git ls-remote --exit-code --heads origin "$ACK_BRANCH" >/dev/null 2>&1; then
+            MIRROR_TIP=$(git ls-remote origin "refs/heads/$ACK_BRANCH" | awk '{print $1}')
+            if [ "${MIRROR_TIP:-}" = "$UPSTREAM_TIP" ]; then
+              echo "already_current=true" >> "$GITHUB_OUTPUT"
+              echo "Mirror already at upstream HEAD $UPSTREAM_TIP — skipping push."
+            fi
           fi
 
-      - name: Replace branch contents
+      - name: Push upstream commits to mirror
+        if: steps.uptodate.outputs.already_current != 'true'
         shell: bash
         run: |
           set -euo pipefail
 
-          rsync -a --delete \
-            --exclude='.git' \
-            /tmp/kernel-common/ "$GITHUB_WORKSPACE/"
+          # Push the actual upstream commit objects — not a synthetic snapshot.
+          # This preserves:
+          #   - the upstream commit SHA and parent chain
+          #   - cross-branch object sharing (branches that share Linux history
+          #     share pack objects in the mirror)
+          #   - delta compression between branches
+          #
+          # --force-with-lease: safe non-fast-forward push; fails if the mirror
+          # ref was updated by a concurrent process since our last fetch.
+          # This handles both:
+          #   - normal incremental updates (upstream moved forward)
+          #   - migration from synthetic/orphan history (one-time replacement)
+          git push origin "FETCH_HEAD:refs/heads/$ACK_BRANCH" \
+            --force-with-lease="refs/heads/$ACK_BRANCH"
 
-          cat > "$GITHUB_WORKSPACE/.mirror-info" <<EOF
-          upstream=android.googlesource.com/kernel/common
-          branch=${ACK_BRANCH}
-          commit=${ACK_COMMIT}
-          kernel_version=${KERNEL_VERSION}
-          EOF
-
-          git add -A
-
-      - name: Commit and push
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          TARGET_BRANCH="${{ matrix.ack_branch }}"
-
-          if git diff --cached --quiet; then
-            echo "No changes for $TARGET_BRANCH."
-            exit 0
-          fi
-
-          if [ -n "${KERNEL_VERSION:-}" ]; then
-            MSG="Sync ${TARGET_BRANCH} to Linux ${KERNEL_VERSION}"
-          else
-            MSG="Sync ${TARGET_BRANCH}"
-          fi
-
-          git commit -m "$MSG" \
-            -m "Upstream: https://android.googlesource.com/kernel/common" \
-            -m "Branch: ${TARGET_BRANCH}" \
-            -m "Commit: ${ACK_COMMIT}"
-
-          git push origin "HEAD:${TARGET_BRANCH}" --force-with-lease
+          echo "### Synced: $ACK_BRANCH" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Upstream commit | \`$UPSTREAM_TIP\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Kernel version | \`$KERNEL_VERSION\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Source | [\`$ACK_BRANCH\`]($UPSTREAM_URL/+log/$ACK_BRANCH) |" >> "$GITHUB_STEP_SUMMARY"
