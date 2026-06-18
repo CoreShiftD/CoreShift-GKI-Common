@@ -441,9 +441,9 @@ apply_patch_file() {
   : > "$patch_log"
 
   log "Dry-run ${label} patch: $patch_file"
-  if (cd "$target_dir" && patch --dry-run -p1 < "$patch_file") >"$patch_log" 2>&1; then
+  if (cd "$target_dir" && patch --dry-run --fuzz=3 -p1 < "$patch_file") >"$patch_log" 2>&1; then
     log "Applying ${label} patch: $patch_file"
-    if ! (cd "$target_dir" && patch -p1 < "$patch_file") >>"$patch_log" 2>&1; then
+    if ! (cd "$target_dir" && patch --fuzz=3 -p1 < "$patch_file") >>"$patch_log" 2>&1; then
       echo "Failed to apply ${label} patch: $patch_file" >&2
       sed -n '1,120p' "$patch_log" >&2
       cleanup_patch_log "$patch_log"
@@ -453,7 +453,7 @@ apply_patch_file() {
     return 0
   fi
 
-  if (cd "$target_dir" && patch --dry-run -R -p1 < "$patch_file") >"$patch_log" 2>&1; then
+  if (cd "$target_dir" && patch --dry-run -R --fuzz=3 -p1 < "$patch_file") >"$patch_log" 2>&1; then
     log "Skipping already-applied ${label} patch: $patch_file"
     cleanup_patch_log "$patch_log"
     return 0
