@@ -313,25 +313,6 @@ if [ "$USER_SET_LTO" -eq 1 ]; then
   EFFECTIVE_LTO="$USER_LTO_VALUE"
 fi
 
-if [ "$PROFILE_NAME" = "android16-6.12-lts" ]; then
-  if [ "$USER_SET_LTO" -eq 1 ] && [ "$USER_LTO_VALUE" != "thin" ]; then
-    echo "android16-6.12-lts forces ThinLTO. Use LTO=thin or omit the override." >&2
-    exit 1
-  fi
-
-  for extra_arg in "${EXTRA_ARGS[@]}"; do
-    case "$extra_arg" in
-      --lto=thin)
-        ;;
-      --lto=full|--lto=none|--lto=default)
-        echo "android16-6.12-lts forces --lto=thin. Unsupported extra arg: $extra_arg" >&2
-        exit 1
-        ;;
-    esac
-  done
-
-  EFFECTIVE_LTO="thin"
-fi
 
 matrix_json="$(
   python3 "$REPO_ROOT/scripts/resolve-build-matrix.py" \

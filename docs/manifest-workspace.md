@@ -15,7 +15,7 @@ Profile example:
 
 ```json
 {
-  "manifest_overlay": "manifests/overlays/android16-6.12-lts.json",
+  "manifest_overlay": "manifests/overlays/android15-6.6-lts.json",
   "manifest_overlay_mode": "safe"
 }
 ```
@@ -95,7 +95,7 @@ You can tune manifest setup with:
 `CORESHIFT_REPO_*` and `CORESHIFT_REPO_NO_VERIFY` can be passed through `./scripts/build-kernel.sh` with `--build-env KEY=VALUE`.
 
 ```bash
-./scripts/build-kernel.sh android16-6.12-lts \
+./scripts/build-kernel.sh android15-6.6-lts \
   --build-env CORESHIFT_REPO_JOBS=2 \
   --build-env CORESHIFT_REPO_PARTIAL_CLONE=0 \
   --build-env CORESHIFT_REPO_CLONE_FILTER=blob:none

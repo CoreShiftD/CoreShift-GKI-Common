@@ -18,7 +18,6 @@ on:
           - android14-5.15-lts
           - android14-6.1-lts
           - android15-6.6-lts
-          - android16-6.12-lts
       extra_remove_projects:
         description: "Comma-separated extra project names to remove for this test run only."
         required: false
@@ -60,7 +59,6 @@ jobs:
               "android14-5.15-lts",
               "android14-6.1-lts",
               "android15-6.6-lts",
-              "android16-6.12-lts",
           ]
 
           include = [{"profile": profile} for profile in profiles] if selected == "all" else [{"profile": selected}]

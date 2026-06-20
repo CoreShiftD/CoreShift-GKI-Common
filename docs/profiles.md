@@ -10,7 +10,6 @@
 - `android14-5.15-lts`
 - `android14-6.1-lts`
 - `android15-6.6-lts`
-- `android16-6.12-lts`
 
 ## Profile JSON schema
 
@@ -45,7 +44,7 @@ Example:
 
 ```json
 {
-  "manifest_overlay": "manifests/overlays/android16-6.12-lts.json",
+  "manifest_overlay": "manifests/overlays/android15-6.6-lts.json",
   "manifest_overlay_mode": "safe"
 }
 ```
@@ -81,7 +80,6 @@ Allowed `lto` values are:
 ## Current policy
 
 - Every current profile declares `lto` explicitly.
-- All current profiles use `full` LTO except `android16-6.12-lts`, which uses `thin`.
-- `android16-6.12-lts` rejects full-LTO override paths because full LTO broke the Kleaf `rust_binder.ko` output.
+- All current profiles use `full` LTO.
 - Every current profile selects a profile-specific overlay JSON and currently uses safe mode.
 - `manifests/overlays/default.json` is the baseline safe policy for the overlay model.

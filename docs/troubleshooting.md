@@ -6,12 +6,6 @@
 
 CoreShift patches the prepared workspace so those tests can use `UAPI_SYSROOT_CFLAGS`, with the default sysroot pointing at `/usr/aarch64-linux-gnu/include`.
 
-## `android16-6.12-lts` full LTO and `rust_binder.ko`
-
-`android16-6.12-lts` uses thin LTO because full LTO caused the Kleaf `rust_binder.ko` output to disappear.
-
-Full-LTO override paths are intentionally rejected for that profile.
-
 ## BBG `CONFIG_LSM` / `baseband_guard`
 
 BBG writes variant-owned config into `common/features.fragment` and ensures `CONFIG_LSM` includes `baseband_guard`.

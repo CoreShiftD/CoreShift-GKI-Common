@@ -17,7 +17,6 @@ EXPECTED_BRANCHES = (
     "android14-5.15-lts",
     "android14-6.1-lts",
     "android15-6.6-lts",
-    "android16-6.12-lts",
 )
 
 REQUIRED_FIELDS = (

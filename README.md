@@ -63,7 +63,6 @@ cp configs/fragments/private.fragment.example private.fragment
 | `android14-5.15-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
 | `android14-6.1-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
 | `android15-6.6-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
-| `android16-6.12-lts` | `thin` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
 
 ## Documentation
 

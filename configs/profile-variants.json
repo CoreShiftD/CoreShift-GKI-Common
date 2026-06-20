@@ -7,7 +7,6 @@
     "android13-5.15-lts": ["vanilla", "bbg", "ksu", "ksu-bbg", "ksu-susfs", "ksu-susfs-bbg"],
     "android14-5.15-lts": ["vanilla", "bbg", "ksu", "ksu-bbg", "ksu-susfs", "ksu-susfs-bbg"],
     "android14-6.1-lts": ["vanilla", "bbg", "ksu", "ksu-bbg", "ksu-susfs", "ksu-susfs-bbg"],
-    "android15-6.6-lts": ["vanilla", "bbg", "ksu", "ksu-bbg", "ksu-susfs", "ksu-susfs-bbg"],
-    "android16-6.12-lts": ["vanilla", "bbg", "ksu", "ksu-bbg", "ksu-susfs", "ksu-susfs-bbg"]
+    "android15-6.6-lts": ["vanilla", "bbg", "ksu", "ksu-bbg", "ksu-susfs", "ksu-susfs-bbg"]
   }
 }

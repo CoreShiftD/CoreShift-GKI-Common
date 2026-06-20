@@ -38,5 +38,4 @@ Kleaf consumes `common/coreshift.kleaf.fragment`, which is generated during work
 
 - `coreshift.fragment` stays branch-neutral and retains the filesystem defaults.
 - Repo-root `private.fragment` is local and layered last relative to the baseline fragment.
-- `android16-6.12-lts` intentionally rejects full-LTO override paths such as `CONFIG_LTO_CLANG_FULL=y` in repo-root `private.fragment`.
 
