@@ -22,6 +22,7 @@ SUSFS_DIR="$COMMON_DIR/SUSFS"
 SUSFS_REPO="${SUSFS_REPO:-https://gitlab.com/simonpunk/susfs4ksu.git}"
 SUSFS_REFS_CONFIG="$REPO_ROOT/configs/susfs-refs.json"
 LOCAL_SUSFS_PATCH_ROOT="$REPO_ROOT/patches/susfs"
+LOCAL_KSU_PATCH_ROOT="$REPO_ROOT/patches/ksu"
 if [ -n "${CORESHIFT_LOG_DIR:-}" ]; then
   SUSFS_LOG_DIR="$CORESHIFT_LOG_DIR/patches/susfs"
   mkdir -p "$SUSFS_LOG_DIR"
@@ -576,6 +577,18 @@ if [ -n "$KERNELSU_PATCH_FILE" ]; then
   apply_patch_file "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
   config_patch_inputs+=("$KERNELSU_PATCH_FILE")
 fi
+
+for ksu_local_dir in \
+  "$LOCAL_KSU_PATCH_ROOT/$PROFILE_NAME" \
+  "$LOCAL_KSU_PATCH_ROOT/$ANDROID_RELEASE-$KERNEL_VERSION" \
+  "$LOCAL_KSU_PATCH_ROOT/$KERNEL_VERSION" \
+  ; do
+  [ -d "$ksu_local_dir" ] || continue
+  while IFS= read -r patch_file; do
+    apply_patch_file "$patch_file" "$KERNELSU_DIR" "ksu-local"
+  done < <(find "$ksu_local_dir" -maxdepth 1 -name '*.patch' | sort)
+  break
+done
 
 for patch_file in "${effective_kernel_patch_files[@]}"; do
   apply_patch_file "$patch_file" "$COMMON_DIR" "kernel"
