@@ -113,17 +113,27 @@ jobs:
           git fetch origin "${{ matrix.ack_branch }}" --depth=1 || true
 
       - name: Fetch upstream branch
+        id: fetch
         shell: bash
         run: |
-          set -euo pipefail
+          set -xuo pipefail
 
           ACK_BRANCH="${{ matrix.ack_branch }}"
+          echo "ACK_BRANCH=$ACK_BRANCH" >> "$GITHUB_ENV"
 
+          set +e
           git fetch upstream "$ACK_BRANCH" --depth=1 --no-tags
+          fetch_rc=$?
+          set -e
+
+          if [ "$fetch_rc" -ne 0 ]; then
+            echo "::warning::$ACK_BRANCH: upstream fetch failed (rc=$fetch_rc) — branch may not exist yet, skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
           UPSTREAM_TIP=$(git rev-parse FETCH_HEAD)
-          echo "ACK_BRANCH=$ACK_BRANCH"         >> "$GITHUB_ENV"
-          echo "UPSTREAM_TIP=$UPSTREAM_TIP"     >> "$GITHUB_ENV"
+          echo "UPSTREAM_TIP=$UPSTREAM_TIP" >> "$GITHUB_ENV"
 
           KERNEL_VERSION=$(git show FETCH_HEAD:Makefile 2>/dev/null \
             | awk '/^VERSION =/{v=$3} /^PATCHLEVEL =/{p=$3} /^SUBLEVEL =/{s=$3}
@@ -132,9 +142,10 @@ jobs:
 
       - name: Check if mirror is already current
         id: uptodate
+        if: steps.fetch.outputs.skip != 'true'
         shell: bash
         run: |
-          set -euo pipefail
+          set -xuo pipefail
           MIRROR_TIP=$(git ls-remote origin "refs/heads/$ACK_BRANCH" | awk '{print $1}')
           if [ "${MIRROR_TIP:-}" = "$UPSTREAM_TIP" ]; then
             echo "already_current=true" >> "$GITHUB_OUTPUT"
@@ -142,10 +153,10 @@ jobs:
           fi
 
       - name: Push upstream commits to mirror
-        if: steps.uptodate.outputs.already_current != 'true'
+        if: steps.fetch.outputs.skip != 'true' && steps.uptodate.outputs.already_current != 'true'
         shell: bash
         run: |
-          set -euo pipefail
+          set -xuo pipefail
 
           # Push the actual upstream commit objects — no synthetic snapshots.
           # Preserves upstream ancestry, commit SHAs, and cross-branch object
@@ -154,8 +165,16 @@ jobs:
           #   - normal fast-forward updates
           #   - first-time branch creation (no existing lease ref → push allowed)
           #   - migration from old synthetic/orphan history
+          set +e
           git push origin "FETCH_HEAD:refs/heads/$ACK_BRANCH" \
             --force-with-lease="refs/heads/$ACK_BRANCH"
+          push_rc=$?
+          set -e
+
+          if [ "$push_rc" -ne 0 ]; then
+            echo "::warning::$ACK_BRANCH: push failed (rc=$push_rc) — transient error, will retry next run"
+            exit 0
+          fi
 
           echo "### Synced: $ACK_BRANCH" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
