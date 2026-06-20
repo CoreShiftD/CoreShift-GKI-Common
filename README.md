@@ -2,7 +2,7 @@
 
 JSON-driven Android Common Kernel/GKI workspace builder for multiple ACK LTS branches.
 
-It is intended for repeatable ACK/GKI kernel builds and CI templates, not ROM building.
+Intended for repeatable ACK/GKI kernel builds and CI templates, not ROM building.
 
 ## Features
 
@@ -14,13 +14,14 @@ It is intended for repeatable ACK/GKI kernel builds and CI templates, not ROM bu
 - Profile-aware LTO
 - Optional BBG, KernelSU, KernelSU SUSFS, and Droidspaces GKI support
 - AnyKernel3 packaging
-- GitHub Actions templates
+- Kernel mirror with LTS and monthly date branches
+- GitHub Actions workflows for LTS, date branch, and custom kernel source builds
 
 ## Quick start
 
 ```bash
-git clone https://github.com/CoreShiftD/android_kernel_common_lts.git
-cd android_kernel_common_lts
+git clone https://github.com/CoreShiftD/CoreShift-GKI-Common.git
+cd CoreShift-GKI-Common
 ./scripts/install-build-tools.sh
 ./scripts/build-kernel.sh android12-5.10-lts
 ```
@@ -29,6 +30,21 @@ Build a variant:
 
 ```bash
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-bbg
+```
+
+Build from a date branch:
+
+```bash
+./scripts/build-kernel.sh android15-6.6-lts \
+  --build-env KERNEL_SOURCE_BRANCH_OVERRIDE=android15-6.6-2026-06
+```
+
+Build from a custom kernel source:
+
+```bash
+./scripts/build-kernel.sh android15-6.6-lts \
+  --build-env KERNEL_COMMON_URL=https://github.com/your/kernel.git \
+  --build-env KERNEL_SOURCE_BRANCH_OVERRIDE=your-branch
 ```
 
 Enable Droidspaces on a GKI profile:
@@ -46,15 +62,18 @@ cp configs/fragments/private.fragment.example private.fragment
 
 ## GitHub Actions
 
-- `Build.yml`: single selected profile and variant
-- `Build-All.yml`: vanilla-only matrix across supported profiles
-- `Build-Variants.yml`: JSON-resolved allowed profile/variant matrix
-- `Test-Manifest-Trim.yml`: manifest workspace policy test only
+| Workflow | Purpose |
+|---|---|
+| `Build kernel` (`Build.yml`) | Unified build — choose source (lts / date / custom), kernel version, and variant |
+| `Build variants` (`Build-Variants.yml`) | Build all variants or a specific one; builds both LTS and date branch per version |
+| `Sync kernel common branches` (`sync-kernel-source.yml`) | Mirror LTS and monthly date branches from upstream ACK |
+| `Test-Manifest-Trim.yml` | Manifest workspace policy test only |
+| `validate-manifest-workspace.yml` | Validate manifest workspace without building |
 
 ## Supported profiles
 
 | Profile | LTO | Variants |
-| --- | --- | --- |
+|---|---|---|
 | `android11-5.4-lts` | `full` | `vanilla`, `bbg` |
 | `android12-5.4-lts` | `full` | `vanilla`, `bbg` |
 | `android12-5.10-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
