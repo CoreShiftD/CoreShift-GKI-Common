@@ -74,14 +74,14 @@ cp configs/fragments/private.fragment.example private.fragment
 
 | Profile | LTO | Variants |
 |---|---|---|
-| `android11-5.4-lts` | `full` | `vanilla`, `bbg` |
-| `android12-5.4-lts` | `full` | `vanilla`, `bbg` |
-| `android12-5.10-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
-| `android13-5.10-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
-| `android13-5.15-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
-| `android14-5.15-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
-| `android14-6.1-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
-| `android15-6.6-lts` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
+| `android11-5.4` | `full` | `vanilla`, `bbg` |
+| `android12-5.4` | `full` | `vanilla`, `bbg` |
+| `android12-5.10` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
+| `android13-5.10` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
+| `android13-5.15` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
+| `android14-5.15` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
+| `android14-6.1` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
+| `android15-6.6` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg` |
 
 ## Documentation
 
