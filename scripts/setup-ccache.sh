@@ -19,6 +19,7 @@ CCACHE_FILE_CLONE="${CCACHE_FILE_CLONE:-true}"
 CCACHE_INODE_CACHE="${CCACHE_INODE_CACHE:-true}"
 CCACHE_UMASK="${CCACHE_UMASK:-002}"
 CCACHE_SLOPPINESS="${CCACHE_SLOPPINESS:-file_macro,time_macros,include_file_mtime,include_file_ctime,pch_defines,system_headers,locale}"
+CCACHE_IS_KERNEL_COMPILING="${CCACHE_IS_KERNEL_COMPILING:-true}"
 CORESHIFT_CCACHE_ZERO_STATS="${CORESHIFT_CCACHE_ZERO_STATS:-1}"
 
 set_ccache_config_if_supported() {
@@ -44,6 +45,7 @@ export CCACHE_FILE_CLONE
 export CCACHE_INODE_CACHE
 export CCACHE_UMASK
 export CCACHE_SLOPPINESS
+export CCACHE_IS_KERNEL_COMPILING
 export USE_CCACHE=1
 
 set_ccache_config_if_supported "max_size" "$CCACHE_MAXSIZE"
@@ -56,6 +58,7 @@ set_ccache_config_if_supported "inode_cache" "$CCACHE_INODE_CACHE"
 set_ccache_config_if_supported "umask" "$CCACHE_UMASK"
 set_ccache_config_if_supported "sloppiness" "$CCACHE_SLOPPINESS"
 set_ccache_config_if_supported "ignore_options" "$CCACHE_IGNOREOPTIONS"
+set_ccache_config_if_supported "is_kernel_compiling" "$CCACHE_IS_KERNEL_COMPILING"
 
 if find "$CCACHE_DIR" -mindepth 1 -print -quit >/dev/null 2>&1; then
   echo "Restored ccache contents found"
@@ -90,6 +93,7 @@ if [ -n "${GITHUB_ENV:-}" ]; then
   echo "CCACHE_INODE_CACHE=$CCACHE_INODE_CACHE" >> "$GITHUB_ENV"
   echo "CCACHE_UMASK=$CCACHE_UMASK" >> "$GITHUB_ENV"
   echo "CCACHE_SLOPPINESS=$CCACHE_SLOPPINESS" >> "$GITHUB_ENV"
+  echo "CCACHE_IS_KERNEL_COMPILING=$CCACHE_IS_KERNEL_COMPILING" >> "$GITHUB_ENV"
   echo "USE_CCACHE=1" >> "$GITHUB_ENV"
   if [ -n "${CCACHE_LOGFILE:-}" ]; then
     echo "CCACHE_LOGFILE=$CCACHE_LOGFILE" >> "$GITHUB_ENV"
@@ -110,5 +114,6 @@ echo "CCACHE_FILE_CLONE=$CCACHE_FILE_CLONE"
 echo "CCACHE_INODE_CACHE=$CCACHE_INODE_CACHE"
 echo "CCACHE_UMASK=$CCACHE_UMASK"
 echo "CCACHE_SLOPPINESS=$CCACHE_SLOPPINESS"
+echo "CCACHE_IS_KERNEL_COMPILING=$CCACHE_IS_KERNEL_COMPILING"
 ccache -p || true
 ccache -s || true

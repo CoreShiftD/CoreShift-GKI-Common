@@ -95,6 +95,10 @@ cp configs/fragments/private.fragment.example private.fragment
 - [Manifest workspace](docs/manifest-workspace.md)
 - [Troubleshooting](docs/troubleshooting.md)
 
+## Credits
+
+- [WildKernels](https://github.com/WildKernels) — ccache configuration patterns and workflow design referenced for the ccache implementation in this project.
+
 ## Scope and non-goals
 
 CoreShift builds ACK/GKI kernel artifacts and AnyKernel3 zip outputs.

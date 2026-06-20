@@ -31,6 +31,11 @@ on:
           - ksu-bbg
           - ksu-susfs
           - ksu-susfs-bbg
+      clean_build:
+        description: "Clean build — skip ccache restore and setup"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -146,6 +151,7 @@ jobs:
           sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 
       - name: Restore ccache
+        if: ${{ inputs.clean_build != true }}
         uses: actions/cache@v5
         with:
           path: ~/.cache/ccache
@@ -159,6 +165,7 @@ jobs:
         run: ./scripts/install-build-tools.sh
 
       - name: Setup ccache
+        if: ${{ inputs.clean_build != true }}
         shell: bash
         run: ./scripts/setup-ccache.sh
 
@@ -167,6 +174,7 @@ jobs:
         run: ./scripts/add-swap.sh 16 --aggressive
 
       - name: Ccache stats before build
+        if: ${{ inputs.clean_build != true }}
         shell: bash
         run: ccache -s || true
 
@@ -211,9 +219,10 @@ jobs:
           exit "$status"
 
       - name: Ccache stats after build
-        if: always()
+        id: ccache-stats
+        if: ${{ always() && inputs.clean_build != true }}
         shell: bash
-        run: ccache -s || true
+        run: ./scripts/collect-ccache-stats.sh
 
       - name: List AK3 zip artifacts
         shell: bash
