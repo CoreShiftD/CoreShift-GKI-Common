@@ -23,6 +23,7 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 UPSTREAM_URL = os.environ.get(
@@ -83,10 +84,16 @@ def main() -> None:
     sync_branches: list[str] = list(lts_branches)
     keep_release: set[str]   = set()
 
+    now = datetime.now(tz=timezone.utc)
+    current_ym = (f"{now.year:04d}", f"{now.month:02d}")
+
     for family in kernel_families:
         # Sort descending by (year, month) — lexicographic order is correct
         # for zero-padded YYYY-MM strings.
         releases = sorted(upstream_by_family.get(family, []), reverse=True)
+        # Exclude branches whose YYYY-MM is in the future: Google pre-creates
+        # refs before the objects are actually available for fetch.
+        releases = [(y, mo, b) for y, mo, b in releases if (y, mo) <= current_ym]
         # Sync only the single latest release branch per family.
         for _, _, branch in releases[:1]:
             sync_branches.append(branch)

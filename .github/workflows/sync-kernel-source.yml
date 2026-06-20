@@ -122,7 +122,7 @@ jobs:
           echo "ACK_BRANCH=$ACK_BRANCH" >> "$GITHUB_ENV"
 
           set +e
-          git fetch upstream "$ACK_BRANCH" --depth=1 --no-tags
+          git fetch upstream "$ACK_BRANCH" --no-tags
           fetch_rc=$?
           set -e
 
