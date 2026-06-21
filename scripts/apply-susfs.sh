@@ -20,7 +20,7 @@ COMMON_DIR="$WORKSPACE_DIR/common"
 FEATURES_FRAGMENT="$COMMON_DIR/features.fragment"
 SUSFS_DIR="$COMMON_DIR/SUSFS"
 SUSFS_REPO="${SUSFS_REPO:-https://gitlab.com/simonpunk/susfs4ksu.git}"
-SUSFS_REFS_CONFIG="$REPO_ROOT/configs/susfs-refs.json"
+SUSFS_REFS_CONFIG="${SUSFS_REFS_CONFIG:-$REPO_ROOT/configs/susfs-refs.json}"
 LOCAL_SUSFS_PATCH_ROOT="$REPO_ROOT/patches/susfs"
 LOCAL_KSU_PATCH_ROOT="$REPO_ROOT/patches/ksu"
 if [ -n "${CORESHIFT_LOG_DIR:-}" ]; then

@@ -131,6 +131,7 @@ if feature_requested "susfs" "${trimmed_features[@]}"; then
   elif feature_requested "ksu-next" "${trimmed_features[@]}"; then
     KSU_VARIANT=ksu-next \
       SUSFS_REPO="${KSU_NEXT_SUSFS_REPO:-https://gitlab.com/pershoot/susfs4ksu.git}" \
+      SUSFS_REFS_CONFIG="${KSU_NEXT_SUSFS_REFS_CONFIG:-}" \
       "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
   else
     "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
