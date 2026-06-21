@@ -561,31 +561,43 @@ if [ "${#effective_kernel_patch_files[@]}" -eq 0 ]; then
   fail "No effective SUSFS kernel patch files selected for $PROFILE_NAME"
 fi
 
-KERNELSU_PATCH_FILE="$(find_susfs_repo_path 'KernelSU/10_enable_susfs_for_ksu.patch' || true)"
-if [ -n "$KERNELSU_PATCH_FILE" ]; then
-  log "Using KernelSU SUSFS patch: $KERNELSU_PATCH_FILE"
-else
-  log "KernelSU SUSFS patch not present in selected ref"
-fi
+KSU_VARIANT="${KSU_VARIANT:-ksu}"
 
 KERNELSU_DIR="$(find_kernelsu_dir || true)"
 [ -n "$KERNELSU_DIR" ] || fail "Could not locate an existing KernelSU source tree under $COMMON_DIR"
 log "Resolved KernelSU source tree: $KERNELSU_DIR"
 
 declare -a config_patch_inputs=()
-if [ -n "$KERNELSU_PATCH_FILE" ]; then
-  apply_patch_file "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
-  config_patch_inputs+=("$KERNELSU_PATCH_FILE")
+if [ "$KSU_VARIANT" = "kowsu" ]; then
+  log "Skipping upstream KernelSU SUSFS patch for kowsu variant (incompatible file structure)"
+else
+  KERNELSU_PATCH_FILE="$(find_susfs_repo_path 'KernelSU/10_enable_susfs_for_ksu.patch' || true)"
+  if [ -n "$KERNELSU_PATCH_FILE" ]; then
+    log "Using KernelSU SUSFS patch: $KERNELSU_PATCH_FILE"
+    apply_patch_file "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
+    config_patch_inputs+=("$KERNELSU_PATCH_FILE")
+  else
+    log "KernelSU SUSFS patch not present in selected ref"
+  fi
 fi
 
 for ksu_local_dir in \
+  "$LOCAL_KSU_PATCH_ROOT/kowsu/$PROFILE_NAME" \
+  "$LOCAL_KSU_PATCH_ROOT/kowsu/$ANDROID_RELEASE-$KERNEL_VERSION" \
+  "$LOCAL_KSU_PATCH_ROOT/kowsu/$KERNEL_VERSION" \
+  "$LOCAL_KSU_PATCH_ROOT/kowsu" \
   "$LOCAL_KSU_PATCH_ROOT/$PROFILE_NAME" \
   "$LOCAL_KSU_PATCH_ROOT/$ANDROID_RELEASE-$KERNEL_VERSION" \
   "$LOCAL_KSU_PATCH_ROOT/$KERNEL_VERSION" \
   ; do
+  # kowsu dirs only apply when variant matches
+  case "$ksu_local_dir" in
+    *"/kowsu"*) [ "$KSU_VARIANT" = "kowsu" ] || continue ;;
+  esac
   [ -d "$ksu_local_dir" ] || continue
   while IFS= read -r patch_file; do
     apply_patch_file "$patch_file" "$KERNELSU_DIR" "ksu-local"
+    config_patch_inputs+=("$patch_file")
   done < <(find "$ksu_local_dir" -maxdepth 1 -name '*.patch' | sort)
   break
 done

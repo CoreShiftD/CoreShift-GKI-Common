@@ -113,7 +113,11 @@ if feature_requested "kowsu" "${trimmed_features[@]}"; then
 fi
 
 if feature_requested "susfs" "${trimmed_features[@]}"; then
-  "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
+  if feature_requested "kowsu" "${trimmed_features[@]}"; then
+    KSU_VARIANT=kowsu "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
+  else
+    "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
+  fi
 fi
 
 if feature_requested "bbg" "${trimmed_features[@]}"; then
