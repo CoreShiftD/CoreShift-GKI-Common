@@ -553,6 +553,12 @@ if [ "$DISABLE_KMI_CHECK" = "on" ]; then
 fi
 
 if [ "$SELECTED_MODE" = "google_build_sh" ] && command -v ccache >/dev/null 2>&1; then
+  # Export CLANG_PREBUILT_BIN into the environment before sourcing the ccache
+  # wrapper setup so it can be picked up as the highest-priority clang candidate
+  # (e.g. when a custom clang tarball was downloaded and set via --build-env).
+  if has_build_env_key "CLANG_PREBUILT_BIN"; then
+    export CLANG_PREBUILT_BIN="$(get_build_env_value "CLANG_PREBUILT_BIN")"
+  fi
   # shellcheck source=/dev/null
   . "$REPO_ROOT/scripts/setup-ccache-wrappers.sh" "$WORKSPACE_DIR" "$EFFECTIVE_BUILD_CONFIG"
   append_passthrough_build_env_if_unset "CORESHIFT_CCACHE_WRAPPERS_ENABLED"

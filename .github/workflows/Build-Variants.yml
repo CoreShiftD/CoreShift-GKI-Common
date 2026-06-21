@@ -43,6 +43,8 @@ on:
         type: choice
         options:
           - ""
+          - r584948
+          - r547379
           - r536225
           - r510928
           - r487747c

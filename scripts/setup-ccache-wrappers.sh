@@ -170,6 +170,23 @@ setup_ccache_wrappers() {
   declare -gA CANDIDATE_FAMILY=()
   declare -gA CANDIDATE_VERSION=()
 
+  # Highest-priority candidate: CLANG_PREBUILT_BIN env var (set by build-kernel.sh
+  # when a custom clang tarball was downloaded). Accepted even outside WORKSPACE_DIR.
+  if [ -n "${CLANG_PREBUILT_BIN:-}" ]; then
+    env_clang=""
+    case "$CLANG_PREBUILT_BIN" in
+      */clang) env_clang="$CLANG_PREBUILT_BIN" ;;
+      *)       [ -d "$CLANG_PREBUILT_BIN" ] && env_clang="$CLANG_PREBUILT_BIN/clang" ;;
+    esac
+    if [ -n "$env_clang" ] && [ -x "$env_clang" ]; then
+      env_clang="$(readlink -f "$env_clang")"
+      CANDIDATE_PRIORITY["$env_clang"]=-1
+      CANDIDATE_FAMILY["$env_clang"]=0
+      CANDIDATE_VERSION["$env_clang"]="env-override"
+      echo "CLANG_PREBUILT_BIN env candidate: $env_clang"
+    fi
+  fi
+
   if [ -n "$BUILD_CONFIG_REL" ]; then
     discover_candidates_from_build_config "$BUILD_CONFIG_REL"
   fi
