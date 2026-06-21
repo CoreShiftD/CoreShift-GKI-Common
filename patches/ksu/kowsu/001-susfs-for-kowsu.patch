@@ -44,7 +44,7 @@
      pr_info("su_compat: set to %d\n", enable);
      return 0;
  }
-@@ -81,106 +89,218 @@
+@@ -81,106 +89,221 @@
      return userspace_stack_buffer(ksud_path, sizeof(ksud_path));
  }
  
@@ -302,6 +302,9 @@
 +    return 0;
 +}
 +#endif // #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
++
++extern struct cred *ksu_cred;
++extern void ksu_close_fd(int fd);
 +
 +static char __user *empty_user_path(void)
 +{
