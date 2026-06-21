@@ -44,7 +44,7 @@
      pr_info("su_compat: set to %d\n", enable);
      return 0;
  }
-@@ -81,106 +89,221 @@
+@@ -81,106 +89,219 @@
      return userspace_stack_buffer(ksud_path, sizeof(ksud_path));
  }
  
@@ -304,7 +304,6 @@
 +#endif // #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
 +
 +extern struct cred *ksu_cred;
-+extern void ksu_close_fd(int fd);
 +
 +static char __user *empty_user_path(void)
 +{
@@ -392,7 +391,7 @@
 -    ret = ksu_syscall_table[__NR_execveat](regs);
 +    ret = ksu_syscall_table[__NR_execveat]((struct pt_regs *)regs);
      if (ret < 0) {
-         ksu_close_fd(tmp_fd);
+         close_fd(tmp_fd);
 -        regs->__PT_PARM1_REG = orig_regs[0];
 -        regs->__PT_PARM2_REG = orig_regs[1];
 -        regs->__PT_PARM3_REG = orig_regs[2];
@@ -448,4 +447,30 @@
 +
  extern uint32_t ksuver_override;
  extern uint32_t ksuflags_override;
+--- a/kernel/Kbuild
++++ b/kernel/Kbuild
+@@ -5,7 +5,18 @@
+ kernelsu-objs += feature/sucompat.o
  
+ kernelsu-objs += hook/setuid_hook.o
++kernelsu-objs += hook/lsm_hook.o
++kernelsu-objs += hook/syscall_event_bridge.o
++kernelsu-objs += hook/syscall_hook_manager.o
++kernelsu-objs += hook/tp_marker.o
++ifeq ($(CONFIG_ARM64),y)
++kernelsu-objs += hook/arm64/patch_memory.o
++kernelsu-objs += hook/arm64/syscall_hook.o
++else ifeq ($(CONFIG_X86_64),y)
++kernelsu-objs += hook/x86_64/patch_memory.o
++kernelsu-objs += hook/x86_64/syscall_hook.o
++endif
+ 
+ kernelsu-objs += infra/file_wrapper.o
+ kernelsu-objs += infra/event_queue.o
+ kernelsu-objs += infra/seccomp_cache.o
+@@ -12,4 +23,5 @@
+ kernelsu-objs += infra/su_mount_ns.o
++kernelsu-objs += infra/symbol_resolver.o
+ 
+ ifneq ($(CONFIG_KSU_DISABLE_MANAGER),y)
+ kernelsu-objs += manager/apk_sign.o
