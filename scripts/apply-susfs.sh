@@ -467,6 +467,25 @@ apply_patch_file() {
   return 1
 }
 
+# Apply a patch in best-effort mode: hunks that apply cleanly are applied,
+# rejected hunks are discarded (written to /dev/null).  Used for the upstream
+# KernelSU SUSFS patch when the target fork (e.g. kowsu) diverges in a known
+# subset of files — a follow-up fixup patch handles the remainder.
+apply_patch_file_best_effort() {
+  local patch_file="$1"
+  local target_dir="$2"
+  local label="$3"
+  local patch_log
+
+  patch_log="$(patch_log_path "$patch_file" "$label")"
+  : > "$patch_log"
+
+  log "Applying ${label} patch (best-effort, rejections discarded): $patch_file"
+  (cd "$target_dir" && patch --fuzz=3 -p1 --reject-file=/dev/null < "$patch_file") \
+    >"$patch_log" 2>&1 || true
+  cleanup_patch_log "$patch_log"
+}
+
 verify_susfs_integration() {
   local ksu_dir="$1"
 
@@ -568,17 +587,21 @@ KERNELSU_DIR="$(find_kernelsu_dir || true)"
 log "Resolved KernelSU source tree: $KERNELSU_DIR"
 
 declare -a config_patch_inputs=()
-if [ "$KSU_VARIANT" = "kowsu" ]; then
-  log "Skipping upstream KernelSU SUSFS patch for kowsu variant (incompatible file structure)"
-else
-  KERNELSU_PATCH_FILE="$(find_susfs_repo_path 'KernelSU/10_enable_susfs_for_ksu.patch' || true)"
-  if [ -n "$KERNELSU_PATCH_FILE" ]; then
+KERNELSU_PATCH_FILE="$(find_susfs_repo_path 'KernelSU/10_enable_susfs_for_ksu.patch' || true)"
+if [ -n "$KERNELSU_PATCH_FILE" ]; then
+  if [ "$KSU_VARIANT" = "kowsu" ]; then
+    # KOWX712/KernelSU diverges from tiann in two files (sucompat.c, supercall.c).
+    # Apply the upstream patch in best-effort mode (27/29 hunks apply cleanly),
+    # then let the local kowsu fixup patch handle the two diverged files.
+    log "Using KernelSU SUSFS patch (best-effort for kowsu): $KERNELSU_PATCH_FILE"
+    apply_patch_file_best_effort "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
+  else
     log "Using KernelSU SUSFS patch: $KERNELSU_PATCH_FILE"
     apply_patch_file "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
-    config_patch_inputs+=("$KERNELSU_PATCH_FILE")
-  else
-    log "KernelSU SUSFS patch not present in selected ref"
   fi
+  config_patch_inputs+=("$KERNELSU_PATCH_FILE")
+else
+  log "KernelSU SUSFS patch not present in selected ref"
 fi
 
 for ksu_local_dir in \
