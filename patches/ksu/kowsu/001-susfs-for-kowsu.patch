@@ -392,8 +392,7 @@
 -    ret = ksu_syscall_table[__NR_execveat](regs);
 +    ret = ksu_syscall_table[__NR_execveat]((struct pt_regs *)regs);
      if (ret < 0) {
--        close_fd(tmp_fd);
-+        ksu_close_fd(tmp_fd);
+         ksu_close_fd(tmp_fd);
 -        regs->__PT_PARM1_REG = orig_regs[0];
 -        regs->__PT_PARM2_REG = orig_regs[1];
 -        regs->__PT_PARM3_REG = orig_regs[2];
