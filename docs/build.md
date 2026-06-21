@@ -17,9 +17,18 @@ Build a profile:
 Build a profile with a variant:
 
 ```bash
+# KernelSU (tiann)
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-bbg
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-susfs
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-susfs-bbg
+
+# KOWSU (KOWX712 fork)
+./scripts/build-kernel.sh android12-5.10-lts --variant kowsu
+./scripts/build-kernel.sh android12-5.10-lts --variant kowsu-susfs-bbg
+
+# KernelSU-Next
+./scripts/build-kernel.sh android12-5.10-lts --variant ksu-next
+./scripts/build-kernel.sh android12-5.10-lts --variant ksu-next-susfs-bbg
 ```
 
 ## Building from a date branch
@@ -56,11 +65,17 @@ Pin a SUSFS ref:
   --build-env SUSFS_REF=<branch-or-commit>
 ```
 
-Pin KernelSU or BBG:
+Pin KernelSU, KOWSU, KernelSU-Next, or BBG:
 
 ```bash
 ./scripts/build-kernel.sh android13-5.15-lts --variant ksu \
   --build-env KSU_REF=<commit-or-tag>
+
+./scripts/build-kernel.sh android13-5.15-lts --variant kowsu \
+  --build-env KOWSU_REPO=https://github.com/KOWX712/KernelSU.git
+
+./scripts/build-kernel.sh android13-5.15-lts --variant ksu-next-susfs \
+  --build-env KSU_NEXT_SUSFS_REF=dev-susfs
 
 ./scripts/build-kernel.sh android13-5.15-lts --variant bbg \
   --build-env BBG_REF=<commit-or-tag>
@@ -128,7 +143,10 @@ cross-libc headers, `ccache`, and the upstream `repo` launcher in `$HOME/.local/
 | `KERNEL_COMMON_URL` | Override upstream ACK git URL (custom kernel source) |
 | `KERNEL_SOURCE_BRANCH_OVERRIDE` | Override kernel source branch (date branch or custom) |
 | `LTO` | Override LTO mode (`full`, `thin`, `none`) |
-| `KSU_REF` | Pin KernelSU ref |
+| `KSU_REF` | Pin KernelSU (tiann) ref |
+| `KOWSU_REPO` | Override KOWSU repo URL |
+| `KSU_NEXT_REPO` | Override KernelSU-Next repo URL |
+| `KSU_NEXT_SUSFS_REF` | Override KernelSU-Next SUSFS branch (default: `dev-susfs`) |
 | `BBG_REF` | Pin Baseband-guard ref |
 | `SUSFS_REF` | Pin SUSFS ref |
 | `DROIDSPACES_ENABLE` | Enable Droidspaces GKI support (`1`) |

@@ -12,7 +12,7 @@ Unified build workflow. All build scenarios flow through a single entry point.
 |---|---|---|
 | `source_type` | `lts` · `date` · `custom` | `lts` |
 | `kernel_version` | `android15-6.6` … `android11-5.4` · `all` | `android15-6.6` |
-| `variant` | `vanilla` … `ksu-susfs-bbg` · `all` | `vanilla` |
+| `variant` | `vanilla` · `bbg` · `ksu` · `ksu-bbg` · `ksu-susfs` · `ksu-susfs-bbg` · `kowsu` · `kowsu-bbg` · `kowsu-susfs` · `kowsu-susfs-bbg` · `ksu-next` · `ksu-next-bbg` · `ksu-next-susfs` · `ksu-next-susfs-bbg` · `all` | `vanilla` |
 | `custom_url` | git URL (source_type=custom only) | — |
 | `custom_branch` | branch/tag/commit (source_type=custom only) | — |
 | `private_fragment` | Kconfig fragment content | — |
@@ -42,7 +42,7 @@ Builds both the LTS and the latest date branch for the selected kernel version a
 | Input | Options | Default |
 |---|---|---|
 | `kernel_version` | `android15-6.6` … `android11-5.4` · `all` | `all` |
-| `variant` | `vanilla` … `ksu-susfs-bbg` · `all` | `all` |
+| `variant` | `vanilla` · `bbg` · `ksu[‑*]` · `kowsu[‑*]` · `ksu-next[‑*]` · `all` | `all` |
 
 - `kernel_version=all` covers every supported family.
 - `variant=all` covers every allowed variant per profile.
