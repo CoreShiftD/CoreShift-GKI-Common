@@ -57,12 +57,11 @@ if [ -e "$KSU_DIR" ] && [ ! -d "$KSU_DIR/.git" ]; then
 fi
 
 if [ -d "$KSU_DIR/.git" ]; then
-  git -C "$KSU_DIR" fetch --depth 1 origin "$KSU_REF" || true
+  git -C "$KSU_DIR" fetch --depth 1 origin "$KSU_REF"
+  git -C "$KSU_DIR" checkout -B "$KSU_REF" FETCH_HEAD
 else
-  git clone --depth 1 "$KSU_REPO" "$KSU_DIR"
+  git clone --depth 1 -b "$KSU_REF" "$KSU_REPO" "$KSU_DIR"
 fi
-
-git -C "$KSU_DIR" checkout "$KSU_REF" || true
 
 if [ ! -f "$KSU_DIR/kernel/setup.sh" ]; then
   echo "Missing upstream KernelSU setup script: $KSU_DIR/kernel/setup.sh" >&2
