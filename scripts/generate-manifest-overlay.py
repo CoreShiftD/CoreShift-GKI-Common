@@ -313,6 +313,11 @@ def main(argv: list[str]) -> int:
         default="",
         help="Comma-separated extra project names to remove for this run only",
     )
+    parser.add_argument(
+        "--manifest-overlay-mode-override",
+        default="",
+        help="Override the profile's manifest_overlay_mode (safe or aggressive)",
+    )
     args = parser.parse_args(argv)
 
     profile_path = Path(args.profile_json).resolve()
@@ -328,6 +333,21 @@ def main(argv: list[str]) -> int:
         fail(f"workspace is not an initialized repo checkout: {workspace}")
 
     profile = load_profile(profile_path)
+    mode_override = args.manifest_overlay_mode_override
+    if mode_override:
+        if mode_override not in VALID_OVERLAY_MODES:
+            allowed = ", ".join(sorted(VALID_OVERLAY_MODES))
+            fail(f"--manifest-overlay-mode-override must be one of: {allowed}")
+        profile = ProfileConfig(
+            name=profile.name,
+            manifest_branch=profile.manifest_branch,
+            kernel_source_branch=profile.kernel_source_branch,
+            build_config=profile.build_config,
+            bazel_target=profile.bazel_target,
+            manifest_overlay=profile.manifest_overlay,
+            manifest_overlay_mode=mode_override,
+            overlay_policy=profile.overlay_policy,
+        )
     extra_remove_projects = parse_csv_list(args.extra_remove_projects)
     projects = read_resolved_manifest(workspace)
     policy = getattr(profile.overlay_policy, profile.manifest_overlay_mode)

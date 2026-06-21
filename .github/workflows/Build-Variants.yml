@@ -36,6 +36,27 @@ on:
         required: false
         default: false
         type: boolean
+      clang_override:
+        description: "Custom Clang from CoreShift releases (empty = ACK built-in)"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - r536225
+          - r510928
+          - r487747c
+          - r450784e
+          - r416183b
+      manifest_overlay_mode:
+        description: "Manifest trim mode (empty = use profile default)"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - safe
+          - aggressive
 
 permissions:
   contents: read
@@ -178,6 +199,30 @@ jobs:
         shell: bash
         run: ccache -s || true
 
+      - name: Download custom Clang
+        if: ${{ inputs.clang_override != '' }}
+        id: clang-download
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ inputs.clang_override }}"
+          CLANG_DIR="$GITHUB_WORKSPACE/clang-override"
+          mkdir -p "$CLANG_DIR"
+          ASSET_URL=$(gh api repos/CoreShiftD/android_kernel_common_lts/releases/tags/aosp-clang-toolchains \
+            --jq ".assets[] | select(.name | startswith(\"clang-${VERSION}-linux-x86\") and endswith(\".tar.zst\")) | .browser_download_url" \
+            | head -1)
+          if [ -z "$ASSET_URL" ]; then
+            echo "::error::No clang asset found for version ${VERSION} in aosp-clang-toolchains release"
+            exit 1
+          fi
+          echo "Downloading $ASSET_URL"
+          curl -fL "$ASSET_URL" | zstd -d | tar -xC "$CLANG_DIR" --strip-components=1
+          CLANG_BIN="$CLANG_DIR/bin"
+          echo "clang_prebuilt_bin=$CLANG_BIN" >> "$GITHUB_OUTPUT"
+          echo "Custom clang: $("$CLANG_BIN/clang" --version | head -1)"
+
       - name: Prepare log metadata
         shell: bash
         run: |
@@ -208,6 +253,10 @@ jobs:
           build_env_args=()
           [ -n "${{ matrix.kernel_source_branch_override }}" ] && \
             build_env_args+=(--build-env "KERNEL_SOURCE_BRANCH_OVERRIDE=${{ matrix.kernel_source_branch_override }}")
+          [ -n "${{ steps.clang-download.outputs.clang_prebuilt_bin }}" ] && \
+            build_env_args+=(--build-env "CLANG_PREBUILT_BIN=${{ steps.clang-download.outputs.clang_prebuilt_bin }}")
+          [ -n "${{ inputs.manifest_overlay_mode }}" ] && \
+            build_env_args+=(--build-env "CORESHIFT_MANIFEST_OVERLAY_MODE=${{ inputs.manifest_overlay_mode }}")
 
           set +e
           ./scripts/build-kernel.sh "${{ matrix.profile }}" \

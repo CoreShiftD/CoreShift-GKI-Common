@@ -390,7 +390,8 @@ if [ "$SKIP_SETUP" -eq 0 ]; then
     CORESHIFT_REPO_CLONE_FILTER \
     CORESHIFT_REPO_NO_VERIFY \
     KERNEL_COMMON_URL \
-    KERNEL_SOURCE_BRANCH_OVERRIDE
+    KERNEL_SOURCE_BRANCH_OVERRIDE \
+    CORESHIFT_MANIFEST_OVERLAY_MODE
   do
     export_build_env_key_if_set "$setup_env_key"
   done

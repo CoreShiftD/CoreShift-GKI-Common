@@ -1,8 +1,25 @@
 {
   "safe": {
-    "remove_projects": ["kernel/common"]
+    "remove_projects": [
+      "kernel/common",
+      "kernel/hikey-modules",
+      "kernel/tests",
+      "kernel/common-modules/virtual-device",
+      "platform/tools/tradefederation/prebuilts",
+      "platform/prebuilts/asuite"
+    ]
   },
   "aggressive": {
-    "remove_projects": ["kernel/common"]
+    "remove_projects": [
+      "kernel/common",
+      "kernel/hikey-modules",
+      "kernel/tests",
+      "kernel/common-modules/virtual-device",
+      "platform/tools/tradefederation/prebuilts",
+      "platform/prebuilts/asuite",
+      "platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9",
+      "platform/prebuilts/gcc/linux-x86/x86/x86_64-linux-android-4.9",
+      "platform/system/tools/mkbootimg"
+    ]
   }
 }

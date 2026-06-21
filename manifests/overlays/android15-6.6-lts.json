@@ -1,8 +1,28 @@
 {
   "safe": {
-    "remove_projects": ["kernel/common"]
+    "remove_projects": [
+      "kernel/common",
+      "kernel/common-modules/virtual-device",
+      "platform/external/virtio-media"
+    ]
   },
   "aggressive": {
-    "remove_projects": ["kernel/common"]
+    "remove_projects": [
+      "kernel/common",
+      "kernel/common-modules/virtual-device",
+      "platform/external/virtio-media",
+      "platform/prebuilts/clang-tools",
+      "platform/prebuilts/rust",
+      "toolchain/prebuilts/ndk/r26",
+      "platform/external/stardoc",
+      "platform/external/python/absl-py",
+      "platform/external/lz4",
+      "platform/external/pigz",
+      "platform/external/toybox",
+      "platform/external/zlib",
+      "platform/external/zopfli",
+      "platform/system/tools/mkbootimg",
+      "platform/external/bazelbuild-bazel-central-registry"
+    ]
   }
 }

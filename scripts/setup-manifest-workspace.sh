@@ -191,10 +191,15 @@ fi
   OVERLAY_OUTPUT="$WORKSPACE_DIR/.repo/local_manifests/coreshift-overlay.xml"
   MANIFEST_TRIM_REPORT="$WORKSPACE_DIR/manifest-trim-report.txt"
 
+  overlay_mode_args=()
+  if [ -n "${CORESHIFT_MANIFEST_OVERLAY_MODE:-}" ]; then
+    overlay_mode_args=(--manifest-overlay-mode-override "$CORESHIFT_MANIFEST_OVERLAY_MODE")
+  fi
   python3 "$SCRIPT_DIR/generate-manifest-overlay.py" \
     --profile-json "$PROFILE_JSON" \
     --workspace "$WORKSPACE_DIR" \
-    --output "$OVERLAY_OUTPUT"
+    --output "$OVERLAY_OUTPUT" \
+    "${overlay_mode_args[@]}"
 
   echo "  generated overlay manifest path: $OVERLAY_OUTPUT"
   echo "  manifest report path: $MANIFEST_TRIM_REPORT"
