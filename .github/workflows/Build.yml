@@ -39,6 +39,10 @@ on:
           - ksu-bbg
           - ksu-susfs
           - ksu-susfs-bbg
+          - kowsu
+          - kowsu-bbg
+          - kowsu-susfs
+          - kowsu-susfs-bbg
           - all
       custom_url:
         description: "Custom kernel git URL (source_type=custom only)"
@@ -50,6 +54,14 @@ on:
         required: false
         default: ""
         type: string
+      output_mode:
+        description: "Output mode — artifacts: GitHub Actions artifact · release: GitHub pre-release"
+        required: true
+        default: "artifacts"
+        type: choice
+        options:
+          - artifacts
+          - release
       private_fragment:
         description: "Optional Kconfig fragment content layered last"
         required: false
@@ -161,6 +173,8 @@ jobs:
     if: needs.resolve.outputs.count != '0'
     runs-on: ubuntu-24.04
     timeout-minutes: 120
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.resolve.outputs.matrix) }}
@@ -343,12 +357,42 @@ jobs:
         shell: bash
         run: find "dist/${{ matrix.profile }}" -maxdepth 1 -name '*.zip' -type f -print
 
+      - name: Extract AK3 for artifact upload
+        if: inputs.output_mode == 'artifacts'
+        shell: bash
+        run: |
+          set -euo pipefail
+          zip_path="$(find "dist/${{ matrix.profile }}" -maxdepth 1 -name '*.zip' -type f | head -1)"
+          mkdir -p "dist/${{ matrix.profile }}/ak3-upload"
+          unzip -q "$zip_path" -d "dist/${{ matrix.profile }}/ak3-upload"
+
       - name: Upload AK3 artifact
+        if: inputs.output_mode == 'artifacts'
         uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.artifact_name }}-${{ github.run_number }}
-          path: dist/${{ matrix.profile }}/*.zip
+          path: dist/${{ matrix.profile }}/ak3-upload/
           if-no-files-found: error
+
+      - name: Upload AK3 to release
+        if: inputs.output_mode == 'release'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" \
+            --title "Build #${{ github.run_number }} (${{ inputs.kernel_version }} / ${{ inputs.variant }})" \
+            --prerelease \
+            --notes "Automated build from run #${{ github.run_number }}." \
+            2>/dev/null || true
+          zip_path="$(find "dist/${{ matrix.profile }}" -maxdepth 1 -name '*.zip' -type f | head -1)"
+          raw_name="$(basename "$zip_path" .zip)"
+          kernel_ver="$(printf '%s' "$raw_name" | sed 's/-CoreShift.*//; s/\(-android[0-9]*\).*/\1/')"
+          clean_name="${kernel_ver}-${{ matrix.variant }}.zip"
+          mv "$zip_path" "dist/${{ matrix.profile }}/$clean_name"
+          gh release upload "$TAG" "dist/${{ matrix.profile }}/$clean_name" --clobber
 
       - name: Package logs
         if: always()
