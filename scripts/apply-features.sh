@@ -77,7 +77,7 @@ if [ -n "$FEATURES_CSV" ]; then
     feature="$(printf '%s' "$raw_feature" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
     [ -n "$feature" ] || continue
     case "$feature" in
-      ksu|bbg|susfs)
+      ksu|kowsu|bbg|susfs)
         if ! feature_requested "$feature" "${trimmed_features[@]}"; then
           trimmed_features+=("$feature")
         fi
@@ -90,14 +90,26 @@ if [ -n "$FEATURES_CSV" ]; then
   done
 fi
 
+if feature_requested "ksu" "${trimmed_features[@]}" &&
+   feature_requested "kowsu" "${trimmed_features[@]}"; then
+  echo "Cannot enable both ksu and kowsu." >&2
+  exit 1
+fi
+
 if feature_requested "susfs" "${trimmed_features[@]}" &&
-   ! feature_requested "ksu" "${trimmed_features[@]}"; then
-  echo "SUSFS requires KernelSU. Use ksu-susfs or ksu-susfs-bbg." >&2
+   ! feature_requested "ksu" "${trimmed_features[@]}" &&
+   ! feature_requested "kowsu" "${trimmed_features[@]}"; then
+  echo "SUSFS requires KernelSU. Use ksu-susfs, ksu-susfs-bbg, kowsu-susfs, or kowsu-susfs-bbg." >&2
   exit 1
 fi
 
 if feature_requested "ksu" "${trimmed_features[@]}"; then
   "$SCRIPT_DIR/apply-ksu.sh" "$WORKSPACE_DIR"
+fi
+
+if feature_requested "kowsu" "${trimmed_features[@]}"; then
+  KSU_REPO="${KOWSU_REPO:-https://github.com/KOWX712/KernelSU.git}" \
+    "$SCRIPT_DIR/apply-ksu.sh" "$WORKSPACE_DIR"
 fi
 
 if feature_requested "susfs" "${trimmed_features[@]}"; then
