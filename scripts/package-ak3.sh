@@ -143,8 +143,8 @@ kernel_version="$(strings "$AK3_DIR/Image" 2>/dev/null | grep -E -m1 'Linux vers
 if [ -z "$kernel_version" ]; then
   kernel_version="$PROFILE_NAME"
 fi
-# Strip git hash (-<N>-g<hexchars>) and dirty markers (-maybe-dirty, -dirty)
-kernel_version="$(printf '%s' "$kernel_version" | sed 's/-maybe-dirty//g; s/-dirty//g; s/-[0-9]\{1,\}-g[0-9a-f]\{7,\}//g')"
+# Strip git hash, dirty markers, and page-size suffixes from version string
+kernel_version="$(printf '%s' "$kernel_version" | sed 's/-maybe-dirty//g; s/-dirty//g; s/-[0-9]\{1,\}-g[0-9a-f]\{7,\}//g; s/-[0-9]\{1,\}k//g')"
 
 sanitized_kernel_version="$(
   printf '%s' "$kernel_version" \
