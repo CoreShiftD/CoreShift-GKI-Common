@@ -109,9 +109,8 @@ fi
 
 if feature_requested "susfs" "${trimmed_features[@]}" &&
    ! feature_requested "ksu" "${trimmed_features[@]}" &&
-   ! feature_requested "kowsu" "${trimmed_features[@]}" &&
    ! feature_requested "ksu-next" "${trimmed_features[@]}"; then
-  echo "SUSFS requires KernelSU. Use ksu-susfs, ksu-susfs-bbg, kowsu-susfs, kowsu-susfs-bbg, ksu-next-susfs, or ksu-next-susfs-bbg." >&2
+  echo "SUSFS requires KernelSU. Use ksu-susfs, ksu-susfs-bbg, ksu-next-susfs, or ksu-next-susfs-bbg." >&2
   exit 1
 fi
 
@@ -138,7 +137,8 @@ fi
 
 if feature_requested "susfs" "${trimmed_features[@]}"; then
   if feature_requested "kowsu" "${trimmed_features[@]}"; then
-    KSU_VARIANT=kowsu "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
+    echo "SUSFS is not supported with kowsu. Use ksu-susfs or ksu-next-susfs." >&2
+    exit 1
   elif feature_requested "ksu-next" "${trimmed_features[@]}"; then
     KSU_VARIANT=ksu-next "$SCRIPT_DIR/apply-susfs.sh" "$WORKSPACE_DIR" "$PROFILE_NAME"
   else

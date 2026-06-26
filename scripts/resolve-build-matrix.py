@@ -102,8 +102,10 @@ def load_variants(path: Path) -> dict[str, dict[str, object]]:
         ksu_variants = {"ksu", "kowsu", "ksu-next"} & seen_features
         if len(ksu_variants) > 1:
             fail(f"{path}: variant {variant_name!r} cannot enable more than one of 'ksu', 'kowsu', 'ksu-next'")
-        if "susfs" in seen_features and not ksu_variants:
-            fail(f"{path}: variant {variant_name!r} cannot enable 'susfs' without 'ksu', 'kowsu', or 'ksu-next'")
+        if "susfs" in seen_features and not ({"ksu", "ksu-next"} & seen_features):
+            fail(f"{path}: variant {variant_name!r} cannot enable 'susfs' without 'ksu' or 'ksu-next'")
+        if "susfs" in seen_features and "kowsu" in seen_features:
+            fail(f"{path}: variant {variant_name!r} cannot enable 'susfs' with 'kowsu'")
 
         ak3_suffixes = definition.get("ak3_suffixes")
         if not isinstance(ak3_suffixes, list):

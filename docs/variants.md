@@ -22,13 +22,9 @@ Variant behavior is defined by:
 
 - `kowsu`
 - `kowsu-bbg`
-- `kowsu-susfs`
-- `kowsu-susfs-bbg`
 
 KOWSU is a kprobe-based KernelSU fork. It hooks into the syscall table at syscall entry
-rather than using GKI vendor hooks. This requires a SUSFS integration fixup patch
-(`patches/ksu/kowsu/`) that adapts the SUSFS sucompat functions to the kprobe calling
-convention (`const char __user *` rather than `struct filename *`).
+rather than using GKI vendor hooks.
 
 ### KernelSU-Next (pershoot/KernelSU-Next)
 
@@ -49,7 +45,7 @@ instead of the default branch. The `KSU_NEXT_SUSFS_REF` env var overrides the br
 
 - BBG is integrated through the upstream Baseband-guard `setup.sh`.
 - KernelSU (`ksu`) is integrated through the upstream tiann/KernelSU `kernel/setup.sh` at `main`.
-- KOWSU is integrated through KOWX712/KernelSU `kernel/setup.sh` at `master`, with a local SUSFS fixup patch applied after the upstream SUSFS patch.
+- KOWSU is integrated through KOWX712/KernelSU `kernel/setup.sh` at `master`.
 - KernelSU-Next is integrated through pershoot/KernelSU-Next `kernel/setup.sh`. SUSFS variants use the `dev-susfs` branch.
 - SUSFS is experimental, requires a KernelSU variant, and is integrated from Simonpunk GitLab: `https://gitlab.com/simonpunk/susfs4ksu.git`.
 - SUSFS config is generated from the selected Simonpunk patch and resulting Kconfig symbols.
@@ -58,7 +54,7 @@ instead of the default branch. The `KSU_NEXT_SUSFS_REF` env var overrides the br
 
 Feature application order is:
 
-1. `ksu` / `kowsu` / `ksu-next`
+1. `ksu` / `ksu-next` / `kowsu`
 2. `susfs`
 3. `bbg`
 

@@ -6,7 +6,7 @@ First pre-release. Establishes the full variant matrix including KOWSU and Kerne
 
 ### Added
 
-- **KOWSU variant family** (`kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`) — KOWX712/KernelSU fork with kprobe-based syscall hooking. SUSFS integration uses a local fixup patch (`patches/ksu/kowsu/`) that adapts the SUSFS sucompat functions to the kprobe calling convention.
+- **KOWSU variant family** (`kowsu`, `kowsu-bbg`) — KOWX712/KernelSU fork with kprobe-based syscall hooking.
 - **KernelSU-Next variant family** (`ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg`) — pershoot/KernelSU-Next. SUSFS variants use the `dev-susfs` branch which pre-integrates SUSFS; the upstream SUSFS kernel patch step is skipped for those variants.
 - **Unified build workflow** (`Build.yml`) — single entry point for all source types (lts / date / custom), kernel versions, and variants via dynamic matrix resolution.
 - **`Build variants` workflow** (`Build-Variants.yml`) — builds LTS and latest date branch for any kernel version / variant combination.

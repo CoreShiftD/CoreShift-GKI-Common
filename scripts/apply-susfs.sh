@@ -471,25 +471,6 @@ apply_patch_file() {
   return 1
 }
 
-# Apply a patch in best-effort mode: hunks that apply cleanly are applied,
-# rejected hunks are discarded (written to /dev/null).  Used for the upstream
-# KernelSU SUSFS patch when the target fork (e.g. kowsu) diverges in a known
-# subset of files — a follow-up fixup patch handles the remainder.
-apply_patch_file_best_effort() {
-  local patch_file="$1"
-  local target_dir="$2"
-  local label="$3"
-  local patch_log
-
-  patch_log="$(patch_log_path "$patch_file" "$label")"
-  : > "$patch_log"
-
-  log "Applying ${label} patch (best-effort, rejections discarded): $patch_file"
-  (cd "$target_dir" && patch --fuzz=3 -p1 --reject-file=/dev/null < "$patch_file") \
-    >"$patch_log" 2>&1 || true
-  cleanup_patch_log "$patch_log"
-}
-
 verify_susfs_integration() {
   local ksu_dir="$1"
 
@@ -597,13 +578,6 @@ if [ -n "$KERNELSU_PATCH_FILE" ]; then
     # dev-susfs branch of KernelSU-Next already has susfs integrated via setup.sh.
     # Applying 10_enable_susfs_for_ksu.patch would double-patch.
     log "Skipping KernelSU SUSFS patch (ksu-next dev-susfs branch pre-integrates susfs)"
-  elif [ "$KSU_VARIANT" = "kowsu" ]; then
-    # KOWX712/KernelSU diverges from tiann in two files (sucompat.c, supercall.c).
-    # Apply the upstream patch in best-effort mode (27/29 hunks apply cleanly),
-    # then let the local kowsu fixup patch handle the two diverged files.
-    log "Using KernelSU SUSFS patch (best-effort for kowsu): $KERNELSU_PATCH_FILE"
-    apply_patch_file_best_effort "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
-    config_patch_inputs+=("$KERNELSU_PATCH_FILE")
   else
     log "Using KernelSU SUSFS patch: $KERNELSU_PATCH_FILE"
     apply_patch_file "$KERNELSU_PATCH_FILE" "$KERNELSU_DIR" "kernelsu"
@@ -618,10 +592,6 @@ for ksu_local_dir in \
   "$LOCAL_KSU_PATCH_ROOT/ksu-next/$ANDROID_RELEASE-$KERNEL_VERSION" \
   "$LOCAL_KSU_PATCH_ROOT/ksu-next/$KERNEL_VERSION" \
   "$LOCAL_KSU_PATCH_ROOT/ksu-next" \
-  "$LOCAL_KSU_PATCH_ROOT/kowsu/$PROFILE_NAME" \
-  "$LOCAL_KSU_PATCH_ROOT/kowsu/$ANDROID_RELEASE-$KERNEL_VERSION" \
-  "$LOCAL_KSU_PATCH_ROOT/kowsu/$KERNEL_VERSION" \
-  "$LOCAL_KSU_PATCH_ROOT/kowsu" \
   "$LOCAL_KSU_PATCH_ROOT/$PROFILE_NAME" \
   "$LOCAL_KSU_PATCH_ROOT/$ANDROID_RELEASE-$KERNEL_VERSION" \
   "$LOCAL_KSU_PATCH_ROOT/$KERNEL_VERSION" \
@@ -629,7 +599,6 @@ for ksu_local_dir in \
   # variant-specific dirs only apply when variant matches
   case "$ksu_local_dir" in
     *"/ksu-next"*) [ "$KSU_VARIANT" = "ksu-next" ] || continue ;;
-    *"/kowsu"*)    [ "$KSU_VARIANT" = "kowsu" ]    || continue ;;
   esac
   [ -d "$ksu_local_dir" ] || continue
   while IFS= read -r patch_file; do

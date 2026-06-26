@@ -30,7 +30,7 @@ Build a variant:
 
 ```bash
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-bbg
-./scripts/build-kernel.sh android12-5.10-lts --variant kowsu-susfs-bbg
+./scripts/build-kernel.sh android12-5.10-lts --variant ksu-next-susfs-bbg
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-next-susfs
 ```
 
@@ -78,12 +78,12 @@ cp configs/fragments/private.fragment.example private.fragment
 |---|---|---|
 | `android11-5.4` | `full` | `vanilla`, `bbg` |
 | `android12-5.4` | `full` | `vanilla`, `bbg` |
-| `android12-5.10` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
-| `android13-5.10` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
-| `android13-5.15` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
-| `android14-5.15` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
-| `android14-6.1` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
-| `android15-6.6` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `kowsu-susfs`, `kowsu-susfs-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
+| `android12-5.10` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
+| `android13-5.10` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
+| `android13-5.15` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
+| `android14-5.15` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
+| `android14-6.1` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
+| `android15-6.6` | `full` | `vanilla`, `bbg`, `ksu`, `ksu-bbg`, `ksu-susfs`, `ksu-susfs-bbg`, `kowsu`, `kowsu-bbg`, `ksu-next`, `ksu-next-bbg`, `ksu-next-susfs`, `ksu-next-susfs-bbg` |
 
 ## Changelog
 
@@ -114,5 +114,5 @@ See [CHANGELOG.md](CHANGELOG.md) for release history.
 CoreShift builds ACK/GKI kernel artifacts and AnyKernel3 zip outputs.
 
 - Device-specific `boot.img` or `vendor_boot.img` packaging remains separate.
-- SUSFS is experimental and only available through KernelSU, KOWSU, and KernelSU-Next variants.
+- SUSFS is experimental and only available through KernelSU and KernelSU-Next variants.
 - This is not a ROM builder.

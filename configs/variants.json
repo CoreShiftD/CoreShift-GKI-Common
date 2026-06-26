@@ -40,16 +40,6 @@
       "features": ["kowsu", "bbg"],
       "ak3_suffixes": ["KOWSU", "BBG"]
     },
-    "kowsu-susfs": {
-      "description": "CoreShift build with KOWX712's KernelSU fork and SUSFS support.",
-      "features": ["kowsu", "susfs"],
-      "ak3_suffixes": ["KOWSU", "SUSFS"]
-    },
-    "kowsu-susfs-bbg": {
-      "description": "CoreShift build with KOWX712's KernelSU fork, SUSFS, and BBG support.",
-      "features": ["kowsu", "susfs", "bbg"],
-      "ak3_suffixes": ["KOWSU", "SUSFS", "BBG"]
-    },
     "ksu-next": {
       "description": "CoreShift build with KernelSU-Next support.",
       "features": ["ksu-next"],

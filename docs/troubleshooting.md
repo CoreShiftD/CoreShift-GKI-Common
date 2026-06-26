@@ -18,7 +18,7 @@ If you hand-edit fragment inputs around BBG, do not remove that token from the e
 
 ## SUSFS
 
-SUSFS requires a KernelSU variant. Use `ksu-susfs`, `kowsu-susfs`, or `ksu-next-susfs` (with optional `-bbg` suffix). A raw `susfs` feature without a KernelSU variant is rejected.
+SUSFS requires a KernelSU variant. Use `ksu-susfs` or `ksu-next-susfs` (with optional `-bbg` suffix). A raw `susfs` feature without a KernelSU variant is rejected.
 
 If SUSFS patching fails, check for patch rejects, a wrong branch/ref, or a missing `CONFIG_KSU_SUSFS` symbol after patching. Pin a known-good Simonpunk ref with `SUSFS_REF` when automatic branch resolution picks no compatible branch.
 
@@ -31,8 +31,6 @@ If a `-susfs-bbg` variant fails, test the `-susfs` variant first so SUSFS and BB
 ## KOWSU
 
 KOWSU uses KOWX712/KernelSU whose default branch is `master`, not `main`. CoreShift handles this automatically — do not set `KSU_REF=main` for KOWSU builds.
-
-KOWSU SUSFS integration applies a local fixup patch (`patches/ksu/kowsu/`) after the upstream SUSFS patch. If the KOWSU SUSFS patch fails, the upstream SUSFS patch for the selected kernel version may have changed. Check `patches/susfs/*.log` and `*.rej` files in the build log artifact.
 
 ## KernelSU-Next SUSFS
 

@@ -24,7 +24,7 @@ Build a profile with a variant:
 
 # KOWSU (KOWX712 fork)
 ./scripts/build-kernel.sh android12-5.10-lts --variant kowsu
-./scripts/build-kernel.sh android12-5.10-lts --variant kowsu-susfs-bbg
+./scripts/build-kernel.sh android12-5.10-lts --variant ksu-next-susfs-bbg
 
 # KernelSU-Next
 ./scripts/build-kernel.sh android12-5.10-lts --variant ksu-next

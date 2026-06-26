@@ -12,7 +12,7 @@ Unified build workflow. All build scenarios flow through a single entry point.
 |---|---|---|
 | `source_type` | `lts` · `date` · `custom` | `lts` |
 | `kernel_version` | `android15-6.6` … `android11-5.4` · `all` | `android15-6.6` |
-| `variant` | `vanilla` · `bbg` · `ksu` · `ksu-bbg` · `ksu-susfs` · `ksu-susfs-bbg` · `kowsu` · `kowsu-bbg` · `kowsu-susfs` · `kowsu-susfs-bbg` · `ksu-next` · `ksu-next-bbg` · `ksu-next-susfs` · `ksu-next-susfs-bbg` · `all` | `vanilla` |
+| `variant` | `vanilla` · `bbg` · `ksu` · `ksu-bbg` · `ksu-susfs` · `ksu-susfs-bbg` · `kowsu` · `kowsu-bbg` · `ksu-next` · `ksu-next-bbg` · `ksu-next-susfs` · `ksu-next-susfs-bbg` · `all` | `vanilla` |
 | `custom_url` | git URL (source_type=custom only) | — |
 | `custom_branch` | branch/tag/commit (source_type=custom only) | — |
 | `private_fragment` | Kconfig fragment content | — |
