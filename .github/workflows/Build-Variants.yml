@@ -92,6 +92,11 @@ on:
           - both
           - "1"
           - "2"
+      disable_defconfig_check:
+        description: "Disable defconfig normalization check"
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -314,10 +319,13 @@ jobs:
           [ -n "${{ inputs.manifest_overlay_mode }}" ] && \
             build_env_args+=(--build-env "CORESHIFT_MANIFEST_OVERLAY_MODE=${{ inputs.manifest_overlay_mode }}")
 
+          defconfig_check_arg="off"
+          [ "${{ inputs.disable_defconfig_check }}" = "true" ] && defconfig_check_arg="on"
+
           set +e
           ./scripts/build-kernel.sh "${{ matrix.profile }}" \
             --variant "${{ matrix.variant }}" \
-            --disable-defconfig-check on \
+            --disable-defconfig-check "$defconfig_check_arg" \
             "${build_env_args[@]}" 2>&1 | tee "$LOG_DIR/build-kernel.log"
           status="${PIPESTATUS[0]}"
           echo "$status" > "$LOG_DIR/build-exit-code.txt"
