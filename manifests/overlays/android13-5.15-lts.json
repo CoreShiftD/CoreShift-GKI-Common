@@ -11,8 +11,7 @@
       "kernel/common-modules/virtual-device",
       "platform/prebuilts/boot-artifacts",
       "toolchain/prebuilts/ndk/r23",
-      "platform/external/stardoc",
-      "platform/external/python/absl-py"
+      "platform/external/stardoc"
     ]
   }
 }

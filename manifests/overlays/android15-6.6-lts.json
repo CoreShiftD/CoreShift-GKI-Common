@@ -15,7 +15,6 @@
       "platform/prebuilts/rust",
       "toolchain/prebuilts/ndk/r26",
       "platform/external/stardoc",
-      "platform/external/python/absl-py",
       "platform/external/lz4",
       "platform/external/pigz",
       "platform/external/toybox",
