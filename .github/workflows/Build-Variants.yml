@@ -39,6 +39,7 @@ on:
           - ksu-next-bbg
           - ksu-next-susfs
           - ksu-next-susfs-bbg
+          - droidspaces
       output_mode:
         description: "Output mode — artifacts: GitHub Actions artifact · release: GitHub pre-release"
         required: true

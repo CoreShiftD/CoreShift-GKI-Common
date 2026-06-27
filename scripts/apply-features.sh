@@ -81,7 +81,7 @@ if [ -n "$FEATURES_CSV" ]; then
     feature="$(printf '%s' "$raw_feature" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
     [ -n "$feature" ] || continue
     case "$feature" in
-      ksu|kowsu|ksu-next|bbg|susfs)
+      ksu|kowsu|ksu-next|susfs|bbg|droidspaces)
         if ! feature_requested "$feature" "${trimmed_features[@]}"; then
           trimmed_features+=("$feature")
         fi
@@ -148,6 +148,10 @@ fi
 
 if feature_requested "bbg" "${trimmed_features[@]}"; then
   "$SCRIPT_DIR/apply-bbg.sh" "$WORKSPACE_DIR"
+fi
+
+if feature_requested "droidspaces" "${trimmed_features[@]}"; then
+  "$SCRIPT_DIR/apply-droidspaces-gki-support.sh" "$WORKSPACE_DIR"
 fi
 
 sync_kleaf_fragment

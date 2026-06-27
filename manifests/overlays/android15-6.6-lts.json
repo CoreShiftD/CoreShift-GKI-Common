@@ -21,7 +21,6 @@
       "platform/external/toybox",
       "platform/external/zlib",
       "platform/external/zopfli",
-      "platform/system/tools/mkbootimg",
       "platform/external/bazelbuild-bazel-central-registry"
     ]
   }

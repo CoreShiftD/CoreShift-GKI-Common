@@ -7,58 +7,129 @@
     },
     "bbg": {
       "description": "CoreShift build with BBG support.",
-      "features": ["bbg"],
-      "ak3_suffixes": ["BBG"]
+      "features": [
+        "bbg"
+      ],
+      "ak3_suffixes": [
+        "BBG"
+      ]
     },
     "ksu": {
       "description": "CoreShift build with KernelSU support.",
-      "features": ["ksu"],
-      "ak3_suffixes": ["KSU"]
+      "features": [
+        "ksu"
+      ],
+      "ak3_suffixes": [
+        "KSU"
+      ]
     },
     "ksu-bbg": {
       "description": "CoreShift build with KernelSU and BBG support.",
-      "features": ["ksu", "bbg"],
-      "ak3_suffixes": ["KSU", "BBG"]
+      "features": [
+        "ksu",
+        "bbg"
+      ],
+      "ak3_suffixes": [
+        "KSU",
+        "BBG"
+      ]
     },
     "ksu-susfs": {
       "description": "CoreShift build with KernelSU and SUSFS support.",
-      "features": ["ksu", "susfs"],
-      "ak3_suffixes": ["KSU", "SUSFS"]
+      "features": [
+        "ksu",
+        "susfs"
+      ],
+      "ak3_suffixes": [
+        "KSU",
+        "SUSFS"
+      ]
     },
     "ksu-susfs-bbg": {
       "description": "CoreShift build with KernelSU, SUSFS, and BBG support.",
-      "features": ["ksu", "susfs", "bbg"],
-      "ak3_suffixes": ["KSU", "SUSFS", "BBG"]
+      "features": [
+        "ksu",
+        "susfs",
+        "bbg"
+      ],
+      "ak3_suffixes": [
+        "KSU",
+        "SUSFS",
+        "BBG"
+      ]
     },
     "kowsu": {
       "description": "CoreShift build with KOWX712's KernelSU fork support.",
-      "features": ["kowsu"],
-      "ak3_suffixes": ["KOWSU"]
+      "features": [
+        "kowsu"
+      ],
+      "ak3_suffixes": [
+        "KOWSU"
+      ]
     },
     "kowsu-bbg": {
       "description": "CoreShift build with KOWX712's KernelSU fork and BBG support.",
-      "features": ["kowsu", "bbg"],
-      "ak3_suffixes": ["KOWSU", "BBG"]
+      "features": [
+        "kowsu",
+        "bbg"
+      ],
+      "ak3_suffixes": [
+        "KOWSU",
+        "BBG"
+      ]
     },
     "ksu-next": {
       "description": "CoreShift build with KernelSU-Next support.",
-      "features": ["ksu-next"],
-      "ak3_suffixes": ["KSUNEXT"]
+      "features": [
+        "ksu-next"
+      ],
+      "ak3_suffixes": [
+        "KSUNEXT"
+      ]
     },
     "ksu-next-bbg": {
       "description": "CoreShift build with KernelSU-Next and BBG support.",
-      "features": ["ksu-next", "bbg"],
-      "ak3_suffixes": ["KSUNEXT", "BBG"]
+      "features": [
+        "ksu-next",
+        "bbg"
+      ],
+      "ak3_suffixes": [
+        "KSUNEXT",
+        "BBG"
+      ]
     },
     "ksu-next-susfs": {
       "description": "CoreShift build with KernelSU-Next and SUSFS support.",
-      "features": ["ksu-next", "susfs"],
-      "ak3_suffixes": ["KSUNEXT", "SUSFS"]
+      "features": [
+        "ksu-next",
+        "susfs"
+      ],
+      "ak3_suffixes": [
+        "KSUNEXT",
+        "SUSFS"
+      ]
     },
     "ksu-next-susfs-bbg": {
       "description": "CoreShift build with KernelSU-Next, SUSFS, and BBG support.",
-      "features": ["ksu-next", "susfs", "bbg"],
-      "ak3_suffixes": ["KSUNEXT", "SUSFS", "BBG"]
+      "features": [
+        "ksu-next",
+        "susfs",
+        "bbg"
+      ],
+      "ak3_suffixes": [
+        "KSUNEXT",
+        "SUSFS",
+        "BBG"
+      ]
+    },
+    "droidspaces": {
+      "description": "CoreShift build with DroidSpaces GKI support.",
+      "features": [
+        "droidspaces"
+      ],
+      "ak3_suffixes": [
+        "DROIDSPACES"
+      ]
     }
   }
 }

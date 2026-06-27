@@ -12,8 +12,7 @@
       "platform/prebuilts/clang-tools",
       "toolchain/prebuilts/ndk/r23",
       "platform/external/stardoc",
-      "platform/external/python/absl-py",
-      "platform/system/tools/mkbootimg"
+      "platform/external/python/absl-py"
     ]
   }
 }

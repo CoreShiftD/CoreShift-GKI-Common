@@ -11,8 +11,7 @@
       "kernel/common",
       "kernel/hikey-modules",
       "kernel/common-modules/virtual-device",
-      "platform/prebuilts/gas/linux-x86",
-      "platform/system/tools/mkbootimg"
+      "platform/prebuilts/gas/linux-x86"
     ]
   }
 }

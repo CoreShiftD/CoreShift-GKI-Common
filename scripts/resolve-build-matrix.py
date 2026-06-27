@@ -23,6 +23,7 @@ FEATURE_SUFFIXES = {
     "ksu-next": "KSUNEXT",
     "susfs": "SUSFS",
     "bbg": "BBG",
+    "droidspaces": "DROIDSPACES",
 }
 FEATURE_DISPLAY_ORDER = tuple(FEATURE_SUFFIXES)
 
