@@ -8,7 +8,7 @@
   "aggressive": {
     "remove_projects": [
       "kernel/common",
-      "kernel/common-modules/virtual-device",
+      "kernel/common-modules/virtual-device"
     ]
   }
 }
