@@ -2,19 +2,14 @@
   "profiles": {
     "android11-5.4": [
       "vanilla",
-      "bbg",
-      "droidspaces",
       "droidspaces-bbg"
     ],
     "android12-5.4": [
       "vanilla",
-      "bbg",
-      "droidspaces",
       "droidspaces-bbg"
     ],
     "android12-5.10": [
       "vanilla",
-      "bbg",
       "ksu",
       "ksu-bbg",
       "ksu-susfs",
@@ -25,7 +20,6 @@
       "ksu-next-bbg",
       "ksu-next-susfs",
       "ksu-next-susfs-bbg",
-      "droidspaces",
       "droidspaces-bbg",
       "ksu-droidspaces",
       "ksu-bbg-droidspaces",
@@ -40,7 +34,6 @@
     ],
     "android13-5.10": [
       "vanilla",
-      "bbg",
       "ksu",
       "ksu-bbg",
       "ksu-susfs",
@@ -51,8 +44,6 @@
       "ksu-next-bbg",
       "ksu-next-susfs",
       "ksu-next-susfs-bbg",
-      "droidspaces",
-      "droidspaces-bbg",
       "ksu-droidspaces",
       "ksu-bbg-droidspaces",
       "ksu-susfs-droidspaces",
@@ -66,7 +57,6 @@
     ],
     "android13-5.15": [
       "vanilla",
-      "bbg",
       "ksu",
       "ksu-bbg",
       "ksu-susfs",
@@ -77,8 +67,6 @@
       "ksu-next-bbg",
       "ksu-next-susfs",
       "ksu-next-susfs-bbg",
-      "droidspaces",
-      "droidspaces-bbg",
       "ksu-droidspaces",
       "ksu-bbg-droidspaces",
       "ksu-susfs-droidspaces",
@@ -92,7 +80,6 @@
     ],
     "android14-5.15": [
       "vanilla",
-      "bbg",
       "ksu",
       "ksu-bbg",
       "ksu-susfs",
@@ -103,8 +90,6 @@
       "ksu-next-bbg",
       "ksu-next-susfs",
       "ksu-next-susfs-bbg",
-      "droidspaces",
-      "droidspaces-bbg",
       "ksu-droidspaces",
       "ksu-bbg-droidspaces",
       "ksu-susfs-droidspaces",
@@ -118,7 +103,6 @@
     ],
     "android14-6.1": [
       "vanilla",
-      "bbg",
       "ksu",
       "ksu-bbg",
       "ksu-susfs",
@@ -129,8 +113,6 @@
       "ksu-next-bbg",
       "ksu-next-susfs",
       "ksu-next-susfs-bbg",
-      "droidspaces",
-      "droidspaces-bbg",
       "ksu-droidspaces",
       "ksu-bbg-droidspaces",
       "ksu-susfs-droidspaces",
@@ -144,7 +126,6 @@
     ],
     "android15-6.6": [
       "vanilla",
-      "bbg",
       "ksu",
       "ksu-bbg",
       "ksu-susfs",
@@ -155,8 +136,6 @@
       "ksu-next-bbg",
       "ksu-next-susfs",
       "ksu-next-susfs-bbg",
-      "droidspaces",
-      "droidspaces-bbg",
       "ksu-droidspaces",
       "ksu-bbg-droidspaces",
       "ksu-susfs-droidspaces",

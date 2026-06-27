@@ -5,15 +5,6 @@
       "features": [],
       "ak3_suffixes": []
     },
-    "bbg": {
-      "description": "CoreShift build with BBG support.",
-      "features": [
-        "bbg"
-      ],
-      "ak3_suffixes": [
-        "BBG"
-      ]
-    },
     "ksu": {
       "description": "CoreShift build with KernelSU support.",
       "features": [
@@ -120,15 +111,6 @@
         "KSUNEXT",
         "SUSFS",
         "BBG"
-      ]
-    },
-    "droidspaces": {
-      "description": "CoreShift build with DroidSpaces GKI support.",
-      "features": [
-        "droidspaces"
-      ],
-      "ak3_suffixes": [
-        "DROIDSPACES"
       ]
     },
     "droidspaces-bbg": {

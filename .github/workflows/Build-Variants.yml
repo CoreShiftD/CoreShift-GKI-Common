@@ -26,7 +26,6 @@ on:
         options:
           - all
           - vanilla
-          - bbg
           - ksu
           - ksu-bbg
           - ksu-susfs
@@ -37,7 +36,6 @@ on:
           - ksu-next-bbg
           - ksu-next-susfs
           - ksu-next-susfs-bbg
-          - droidspaces
           - droidspaces-bbg
           - ksu-droidspaces
           - ksu-bbg-droidspaces
