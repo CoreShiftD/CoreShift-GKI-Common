@@ -9,7 +9,6 @@
     "remove_projects": [
       "kernel/common",
       "kernel/common-modules/virtual-device",
-      "toolchain/prebuilts/ndk/r23"
     ]
   }
 }

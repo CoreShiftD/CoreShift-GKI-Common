@@ -11,7 +11,6 @@
       "kernel/common",
       "kernel/hikey-modules",
       "kernel/common-modules/virtual-device",
-      "toolchain/prebuilts/ndk/r23"
     ]
   }
 }
