@@ -10,6 +10,7 @@ Env vars:
   SOURCE_TYPE:    lts | date | custom
   KERNEL_VERSION: android15-6.6 | ... | all
   VARIANT:        vanilla | bbg | ... | all
+  PART:           both | 1 | 2  (only applied when KERNEL_VERSION=all)
   CUSTOM_URL:     git URL (source_type=custom only)
   CUSTOM_BRANCH:  branch/tag/commit (source_type=custom only)
 
@@ -30,6 +31,7 @@ from pathlib import Path
 SOURCE_TYPE    = os.environ["SOURCE_TYPE"]
 KERNEL_VERSION = os.environ["KERNEL_VERSION"]
 VARIANT        = os.environ["VARIANT"]
+PART           = os.environ.get("PART", "both")
 CUSTOM_URL     = os.environ.get("CUSTOM_URL", "")
 CUSTOM_BRANCH  = os.environ.get("CUSTOM_BRANCH", "")
 
@@ -43,6 +45,8 @@ ALL_VERSIONS = [
     "android12-5.4",
     "android11-5.4",
 ]
+PART1_VERSIONS = {"android11-5.4", "android12-5.4", "android12-5.10", "android13-5.10"}
+PART2_VERSIONS = {"android13-5.15", "android14-5.15", "android14-6.1", "android15-6.6"}
 DATE_VERSIONS = [v for v in ALL_VERSIONS if not v.endswith("-5.4")]
 
 RELEASE_RE = re.compile(r"refs/heads/(android(\d+)-(\d+\.\d+)-(\d{4})-(\d{2}))$")
@@ -50,7 +54,12 @@ RELEASE_RE = re.compile(r"refs/heads/(android(\d+)-(\d+\.\d+)-(\d{4})-(\d{2}))$"
 
 def resolve_versions() -> list[str]:
     if KERNEL_VERSION == "all":
-        return DATE_VERSIONS if SOURCE_TYPE == "date" else list(ALL_VERSIONS)
+        versions = DATE_VERSIONS if SOURCE_TYPE == "date" else list(ALL_VERSIONS)
+        if PART == "1":
+            versions = [v for v in versions if v in PART1_VERSIONS]
+        elif PART == "2":
+            versions = [v for v in versions if v in PART2_VERSIONS]
+        return versions
     if SOURCE_TYPE == "date" and KERNEL_VERSION in ("android11-5.4", "android12-5.4"):
         print(f"error: no date branches for {KERNEL_VERSION} (pre-GKI 5.4)", file=sys.stderr)
         sys.exit(1)

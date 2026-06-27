@@ -83,6 +83,15 @@ on:
           - ""
           - safe
           - aggressive
+      part:
+        description: "Profile group — both: all profiles · 1: android11/12-5.4 + android12/13-5.10 · 2: android13/14-5.15 + android14-6.1 + android15-6.6"
+        required: false
+        default: "both"
+        type: choice
+        options:
+          - both
+          - "1"
+          - "2"
 
 permissions:
   contents: read
@@ -115,6 +124,7 @@ jobs:
         env:
           KERNEL_VERSION: ${{ inputs.kernel_version }}
           VARIANT:        ${{ inputs.variant }}
+          PART:           ${{ inputs.part }}
         run: |
           set -euo pipefail
 
@@ -150,7 +160,7 @@ jobs:
 
           echo "### Build matrix" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Kernel:** \`$KERNEL_VERSION\` | **Variant:** \`$VARIANT\` | **Builds:** $COUNT" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Kernel:** \`$KERNEL_VERSION\` | **Variant:** \`$VARIANT\` | **Part:** \`$PART\` | **Builds:** $COUNT" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "$RESULT" | jq -r '
             .matrix.include[] |
