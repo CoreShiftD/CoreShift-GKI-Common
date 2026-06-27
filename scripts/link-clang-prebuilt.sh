@@ -35,15 +35,15 @@ fi
 
 # Resolve CLANG_VERSION from workspace build.config.constants
 CLANG_VERSION=""
-for constants_file in \
-  "$WORKSPACE_DIR/common/build.config.constants" \
-  "$WORKSPACE_DIR/build.config.constants"
-do
+while IFS= read -r constants_file; do
   if [ -f "$constants_file" ]; then
-    CLANG_VERSION=$(grep -E '^CLANG_VERSION=' "$constants_file" | cut -d= -f2 | tr -d '[:space:]')
-    break
+    v=$(grep -E '^CLANG_VERSION=' "$constants_file" | cut -d= -f2 | tr -d '[:space:]' | head -1)
+    if [ -n "$v" ]; then
+      CLANG_VERSION="$v"
+      break
+    fi
   fi
-done
+done < <(find "$WORKSPACE_DIR" -maxdepth 3 -name 'build.config.constants' 2>/dev/null)
 
 if [ -z "$CLANG_VERSION" ]; then
   echo "Could not determine CLANG_VERSION from workspace build.config.constants." >&2
