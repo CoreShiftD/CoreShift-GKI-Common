@@ -110,7 +110,7 @@ def main() -> None:
 
     includes: list[dict] = []
     for ver in versions:
-        profile = ver + "-lts"
+        profile = ver
         manifest_url_override = ""
         manifest_branch_override = ""
         kernel_common_url = ""
