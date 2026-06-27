@@ -365,7 +365,7 @@ BUILD_ENV_KEYS+=("CORESHIFT_AK3_SUFFIXES")
 DEFAULT_BUILD_ENV_KEYS+=("CORESHIFT_AK3_SUFFIXES")
 
 case "$PROFILE_NAME" in
-  android*-5.4-lts)
+  android*-5.4)
     is_54_profile=1
     ;;
   *)
