@@ -357,11 +357,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="build-${{ github.run_number }}"
+          TAG="build-$(date -u +%Y-%m-%d)"
           gh release create "$TAG" \
-            --title "Build #${{ github.run_number }} (${{ inputs.kernel_version }} / ${{ inputs.variant }})" \
+            --title "Build $TAG (${{ inputs.kernel_version }} / ${{ inputs.variant }})" \
             --prerelease \
-            --notes "Automated build from run #${{ github.run_number }}." \
+            --notes "Automated build — $TAG." \
             2>/dev/null || true
           zip_path="$(find "dist/${{ matrix.profile }}" -maxdepth 1 -name '*.zip' -type f | head -1)"
           base="${zip_path##*/}"; base="${base%.zip}"
