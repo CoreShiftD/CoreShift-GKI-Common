@@ -10,7 +10,8 @@
     "remove_projects": [
       "kernel/common",
       "kernel/hikey-modules",
-      "kernel/common-modules/virtual-device"
+      "kernel/common-modules/virtual-device",
+      "platform/prebuilts/clang/host/linux-x86"
     ]
   }
 }
