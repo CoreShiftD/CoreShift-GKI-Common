@@ -461,6 +461,9 @@ for passthrough_key in \
   DROIDSPACES_REPO \
   DROIDSPACES_REF \
   DROIDSPACES_SYSVIPC_KABI_SLOT \
+  A75_LUT_OVERRIDE \
+  A75_LUT_BIG_TABLE \
+  A75_LUT_LITTLE_TABLE \
   USE_CCACHE
 do
   append_passthrough_build_env_if_unset "$passthrough_key"
@@ -531,7 +534,10 @@ for feature_env_key in \
   DROIDSPACES_ENABLE \
   DROIDSPACES_REPO \
   DROIDSPACES_REF \
-  DROIDSPACES_SYSVIPC_KABI_SLOT
+  DROIDSPACES_SYSVIPC_KABI_SLOT \
+  A75_LUT_OVERRIDE \
+  A75_LUT_BIG_TABLE \
+  A75_LUT_LITTLE_TABLE
 do
   if has_build_env_key "$feature_env_key"; then
     export "$feature_env_key=$(get_build_env_value "$feature_env_key")"
@@ -558,6 +564,10 @@ fi
 
 if build_env_enabled "${DROIDSPACES_ENABLE:-0}"; then
   "$REPO_ROOT/scripts/apply-droidspaces-gki-support.sh" "$WORKSPACE_DIR"
+fi
+
+if build_env_enabled "${A75_LUT_OVERRIDE:-0}"; then
+  "$REPO_ROOT/scripts/apply-a75-lut-override.sh" "$WORKSPACE_DIR"
 fi
 
 "$REPO_ROOT/scripts/apply-features.sh" "$WORKSPACE_DIR" "$CORESHIFT_FEATURES_VALUE" "$PROFILE_NAME"
