@@ -383,6 +383,33 @@ jobs:
         shell: bash
         run: find "dist/${{ matrix.profile }}" -maxdepth 1 -name '*.zip' -type f -print
 
+      - name: Collect kernel modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          PROFILE_DIR="dist/${{ matrix.profile }}"
+          MODULES_DIR="$PROFILE_DIR/modules"
+          mkdir -p "$MODULES_DIR"
+          while IFS= read -r -d '' ko; do
+            cp "$ko" "$MODULES_DIR/"
+          done < <(find "$PROFILE_DIR" -type f -name '*.ko' -print0)
+          count="$(find "$MODULES_DIR" -type f -name '*.ko' | wc -l)"
+          echo "modules_count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -gt 0 ]; then
+            echo "Collected $count kernel modules"
+            ls -lh "$MODULES_DIR"
+          else
+            echo "No kernel modules found"
+          fi
+
+      - name: Upload kernel modules
+        if: inputs.output_mode == 'artifacts'
+        uses: actions/upload-artifact@v6
+        with:
+          name: modules-${{ matrix.artifact_name }}-${{ github.run_number }}
+          path: dist/${{ matrix.profile }}/modules/
+          if-no-files-found: warn
+
       - name: Extract AK3 for artifact upload
         if: inputs.output_mode == 'artifacts'
         shell: bash

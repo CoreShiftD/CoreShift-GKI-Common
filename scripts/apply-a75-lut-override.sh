@@ -86,20 +86,23 @@ else:
     print("already present")
 PY
 
-echo "[a75-lut] Enabling CONFIG_A75_LUT_OVERRIDE=y in features fragment"
-python3 - "$FEATURES_FRAGMENT" <<'PY'
+echo "[a75-lut] Enabling CONFIG_A75_LUT_OVERRIDE=m in features fragment"
+python3 - "$FEATURES_FRAGMENT" "$COMMON_DIR/drivers/cpufreq" <<'PY'
 import sys
 from pathlib import Path
 
-path = Path(sys.argv[1])
-lines = path.read_text(encoding="utf-8").splitlines()
-line = "CONFIG_A75_LUT_OVERRIDE=y"
+fragment_path = Path(sys.argv[1])
+lines = fragment_path.read_text(encoding="utf-8").splitlines()
+
+# Remove any existing =y line, then add =m
+lines = [l for l in lines if l != "CONFIG_A75_LUT_OVERRIDE=y"]
+line = "CONFIG_A75_LUT_OVERRIDE=m"
 if line not in lines:
     lines.append(line)
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print("enabled")
+    fragment_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print("enabled as module")
 else:
-    print("already enabled")
+    print("already enabled as module")
 PY
 
 echo "a75-lut override applied successfully"
